@@ -1,0 +1,174 @@
+{% load static %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-- page content -->
+<div class="right_col" role="main" style="background-color: #fefcef;">
+    <div class="container">
+        <!-- Encabezado -->
+        <div class="row" style="margin-bottom: 30px; padding-top: 20px;">
+            <div class="col-md-12 col-sm-12">
+                <h2 style="color: #003035; font-size: 24px; font-weight: 600; margin-bottom: 15px;">Editar Usuario</h2>
+                <a href="{% url 'gentelella_page' page='cal_usuarios' %}" class="btn btn-cancel" style="background-color: #949797; color: #ffffff; border: none; padding: 10px 20px; font-weight: 600; border-radius: 4px; text-decoration: none;">
+                    <i class="fa fa-arrow-left" style="margin-right: 5px;"></i> Volver a la lista
+                </a>
+            </div>
+        </div>
+
+        <!-- Mostrar mensajes de éxito o error -->
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-dismissible {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="color: #0d1d1f;">
+                <span aria-hidden="true">×</span>
+            </button>
+            <p style="margin: 0; font-weight: 500;">{{ message }}</p>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- Formulario para editar usuario -->
+        <div class="card" style="background-color: #ffffff; border: 1px solid #bfc6c7; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <div class="collapsible-header" onclick="toggleForm('editForm')" style="cursor: pointer; padding: 12px; background-color: #008a8a; color: #ffffff; border-radius: 6px 6px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-size: 18px; font-weight: 600; margin: 0;">Datos del Usuario</h3>
+                <i id="editFormIcon" class="fa fa-chevron-down" style="font-size: 16px;"></i>
+            </div>
+            <form method="POST" enctype="multipart/form-data" id="editForm" class="form-horizontal" style="margin-top: 20px;">
+                {% csrf_token %}
+                <input type="hidden" name="id_usuario" value="{{ usuario_editar.id }}">
+                <div class="form-row" style="display: flex; flex-wrap: wrap; gap: 20px;">
+                    <div class="form-group" style="flex: 1; min-width: 300px;">
+                        <label style="color: #003035; font-weight: 600; margin-bottom: 8px;">Nombre completo</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #fefcef; border: 1px solid #bfc6c7; border-right: none; border-radius: 4px 0 0 4px;">
+                                <i class="bi bi-person-vcard" style="color: #0d1d1f;"></i>
+                            </span>
+                            <input type="text" name="nombre" class="form-control" required value="{{ usuario_editar.first_name }}" style="border: 1px solid #bfc6c7; border-radius: 0 4px 4px 0; padding: 10px; color: #0d1d1f; background-color: #fefcef; transition: border-color 0.3s;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="flex: 1; min-width: 300px;">
+                        <label style="color: #003035; font-weight: 600; margin-bottom: 8px;">Nombre de usuario</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #fefcef; border: 1px solid #bfc6c7; border-right: none; border-radius: 4px 0 0 4px;">
+                                <i class="bi bi-person-fill" style="color: #0d1d1f;"></i>
+                            </span>
+                            <input type="text" name="username" class="form-control" required value="{{ usuario_editar.username }}" style="border: 1px solid #bfc6c7; border-radius: 0 4px 4px 0; padding: 10px; color: #0d1d1f; background-color: #fefcef; transition: border-color 0.3s;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="flex: 1; min-width: 300px;">
+                        <label for="roles" style="color: #003035; font-weight: 600; margin-bottom: 8px;">Rol del usuario:</label>
+                        <select name="roles" id="roles" class="form-control" required style="border: 1px solid #bfc6c7; border-radius: 4px; padding: 10px; color: #0d1d1f; background-color: #fefcef; transition: border-color 0.3s;">
+                            <option value="">Selecciona un rol</option>                            
+                            <option value="Admin" {% if usuario_editar.roles == "Admin" %}selected{% endif %}>Admin</option>
+                            <option value="Gerente" {% if usuario_editar.roles == "Gerente" %}selected{% endif %}>Gerente</option>
+                            <option value="Asesor" {% if usuario_editar.roles == "Asesor" %}selected{% endif %}>Asesor</option>
+                            <option value="Cliente" {% if usuario_editar.roles == "Cliente" %}selected{% endif %}>Cliente</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="flex: 1; min-width: 300px;">
+                        <label style="color: #003035; font-weight: 600; margin-bottom: 8px;">Correo electrónico</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #fefcef; border: 1px solid #bfc6c7; border-right: none; border-radius: 4px 0 0 4px;">
+                                <i class="bi bi-envelope-fill" style="color: #0d1d1f;"></i>
+                            </span>
+                            <input type="email" name="email" class="form-control" required value="{{ usuario_editar.email }}" style="border: 1px solid #bfc6c7; border-radius: 0 4px 4px 0; padding: 10px; color: #0d1d1f; background-color: #fefcef; transition: border-color 0.3s;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="flex: 1; min-width: 300px;">
+                        <label style="color: #003035; font-weight: 600; margin-bottom: 8px;">Contraseña</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #fefcef; border: 1px solid #bfc6c7; border-right: none; border-radius: 4px 0 0 4px;">
+                                <i class="bi bi-person-fill" style="color: #0d1d1f;"></i>
+                            </span>
+                            <input type="text" name="password" class="form-control" required readonly value="{{ usuario_editar.password }}" style="border: 1px solid #bfc6c7; border-radius: 0 4px 4px 0; padding: 10px; color: #0d1d1f; background-color: #fefcef; transition: border-color 0.3s;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="flex: 1; min-width: 300px;">
+                        <label style="color: #003035; font-weight: 600; margin-bottom: 8px;">Fotografía de perfil</label>
+                        <div class="input-group">
+                            <input type="file" name="profile_picture" accept="image/*" class="form-control" style="background-color: #fefcef; border: 1px solid #bfc6c7; border-radius: 4px;">
+                        </div>
+                        {% if usuario_editar.profile_picture %}
+                            <div class="mt-2">
+                            <img src="{{ usuario_editar.profile_picture.url }}" alt="Foto actual" width="100" class="rounded shadow">
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Campo: Nueva contraseña -->
+                    <div class="form-group" style="flex: 1; min-width: 300px;">
+                    <label style="color: #003035; font-weight: 600; margin-bottom: 8px;">Nueva contraseña (opcional)</label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background-color: #fefcef; border: 1px solid #bfc6c7; border-right: none; border-radius: 4px 0 0 4px;">
+                        <i class="bi bi-lock-fill" style="color: #0d1d1f;"></i>
+                        </span>
+                        <input type="password" name="password1" id="password1" class="form-control" placeholder="********"
+                            style="border: 1px solid #bfc6c7; border-radius: 0; padding: 10px; color: #0d1d1f; background-color: #fefcef;">
+                        <span class="input-group-text" onclick="togglePassword('password1', this)" style="cursor: pointer; border: 1px solid #bfc6c7; border-left: none; border-radius: 0 4px 4px 0;">
+                        <i class="bi bi-eye-fill" id="icon-password1"></i>
+                        </span>
+                    </div>
+                    </div>
+
+                    <!-- Campo: Confirmar nueva contraseña -->
+                    <div class="form-group" style="flex: 1; min-width: 300px;">
+                    <label style="color: #003035; font-weight: 600; margin-bottom: 8px;">Confirmar nueva contraseña</label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background-color: #fefcef; border: 1px solid #bfc6c7; border-right: none; border-radius: 4px 0 0 4px;">
+                        <i class="bi bi-lock" style="color: #0d1d1f;"></i>
+                        </span>
+                        <input type="password" name="password2" id="password2" class="form-control" placeholder="********"
+                            style="border: 1px solid #bfc6c7; border-radius: 0; padding: 10px; color: #0d1d1f; background-color: #fefcef;">
+                        <span class="input-group-text" onclick="togglePassword('password2', this)" style="cursor: pointer; border: 1px solid #bfc6c7; border-left: none; border-radius: 0 4px 4px 0;">
+                        <i class="bi bi-eye-fill" id="icon-password2"></i>
+                        </span>
+                    </div>
+                    </div>
+
+                    <div class="form-group" style="flex: 1; min-width: 300px; display: flex; gap: 10px;">
+                        <button type="submit" class="btn btn-edit" style="background-color: #00cccc; color: #0d1d1f; border: none; padding: 10px 20px; font-weight: 600; border-radius: 4px; transition: background-color 0.3s;">
+                            <i class="fa fa-save" style="margin-right: 5px;"></i> Actualizar
+                        </button>
+                        <a href="{% url 'gentelella_page' page='cal_usuarios' %}" class="btn btn-cancel" style="background-color: #949797; color: #ffffff; border: none; padding: 10px 20px; font-weight: 600; border-radius: 4px; text-decoration: none;">
+                            <i class="fa fa-times" style="margin-right: 5px;"></i> Cancelar
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- /page content -->
+
+<script>
+  function togglePassword(fieldId, iconContainer) {
+    const input = document.getElementById(fieldId);
+    const icon = iconContainer.querySelector('i');
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.remove("bi-eye-fill");
+      icon.classList.add("bi-eye-slash-fill");
+    } else {
+      input.type = "password";
+      icon.classList.remove("bi-eye-slash-fill");
+      icon.classList.add("bi-eye-fill");
+    }
+  }
+</script>
+
+
+<script>
+function toggleForm(formId) {
+    const form = document.getElementById(formId);
+    const icon = document.getElementById(formId + 'Icon');
+    if (form.style.display === 'none' || form.style.display === '') {
+        form.style.display = 'block';
+        icon.classList.remove('fa-chevron-down');
+        icon.classList.add('fa-chevron-up');
+    } else {
+        form.style.display = 'none';
+        icon.classList.remove('fa-chevron-up');
+        icon.classList.add('fa-chevron-down');
+    }
+}
+</script>

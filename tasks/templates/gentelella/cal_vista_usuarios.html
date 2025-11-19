@@ -1,0 +1,678 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>InmoValor | Vistas Alcaldias</title>
+
+    <!-- Bootstrap -->
+    <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="{% static 'vendors/nprogress/nprogress.css' %}" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="{% static 'vendors/iCheck/skins/flat/green.css' %}" rel="stylesheet">
+    <!-- bootstrap-wysiwyg -->
+    <link href="{% static 'vendors/google-code-prettify/bin/prettify.min.css' %}" rel="stylesheet">
+    <!-- Select2 -->
+    <link href="{% static 'vendors/select2/dist/css/select2.min.css' %}" rel="stylesheet">
+    <!-- Switchery -->
+    <link href="{% static 'vendors/switchery/dist/switchery.min.css' %}" rel="stylesheet">
+    <!-- starrr -->
+    <link href="{% static 'vendors/starrr/dist/starrr.css' %}" rel="stylesheet">
+    <!-- bootstrap-daterangepicker -->
+    <link href="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.css' %}" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="{% static 'css/custom.min.css' %}" rel="stylesheet">
+
+    <!-- Estilos personalizados -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fefcef;
+        }
+
+        .right_col {
+            background-color: #fefcef;
+            padding: 15px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 15px;
+            padding: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: #ffffff;
+        }
+
+        .table thead {
+            background-color: #003035;
+            color: #ffffff;
+        }
+
+        .table th,
+        .table td {
+            padding: 10px;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        .table th {
+            font-weight: 600;
+        }
+
+        .table tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f5f6f5;
+        }
+
+        .btn {
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-add {
+            background-color: #00cccc;
+            color: #ffffff;
+        }
+
+        .btn-edit {
+            background-color: #008a8a;
+            color: #ffffff;
+        }
+
+        .btn-delete {
+            background-color: #ff4d4d;
+            color: #ffffff;
+        }
+
+        .btn-cancel {
+            background-color: #949797;
+            color: #ffffff;
+        }
+
+        .form-control {
+            border: 1px solid #bfc6c7;
+            border-radius: 6px;
+            font-size: 13px;
+            padding: 6px 12px;
+        }
+
+        .form-control:focus {
+            border-color: #00cccc;
+            box-shadow: 0 0 5px rgba(0, 204, 204, 0.3);
+            outline: none;
+        }
+
+        .search-bar {
+            position: relative;
+            max-width: 300px;
+            width: 100%;
+        }
+
+        .search-bar i {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #949797;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            color: #0d1d1f;
+            font-size: 13px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .collapsible-header {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .collapsible-header i {
+            font-size: 18px;
+            color: #008a8a;
+            transition: transform 0.2s;
+        }
+
+        .collapsible-header.active i {
+            transform: rotate(180deg);
+        }
+
+        @media (max-width: 768px) {
+            .right_col {
+                padding: 10px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .form-group {
+                min-width: 100%;
+            }
+
+            .search-bar {
+                max-width: 100%;
+            }
+
+            .table th,
+            .table td {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            .btn {
+                font-size: 11px;
+                padding: 5px 10px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            h3 {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body class="nav-md">
+	<div class="container body">
+		<div class="main_container">
+			<div class="col-md-3 left_col">
+				<div class="left_col scroll-view">
+					<div class="navbar nav_title" style="border: 0;">
+						<a href="{% url 'welcome' %}" class="site_title">
+							<img src="{% static 'images/icono.ico' %}" alt="Icono Inmovalor" style="width: 24px; height: 24px; vertical-align: middle;">
+							<span>Inmovalor</span>
+						</a>
+					</div>
+			
+					<div class="clearfix"></div>
+			
+					<!-- menu profile quick info -->
+					<div class="profile clearfix">
+						<div class="profile_pic">
+					<img src="{{ usuario.profile_picture.url }}" alt="Foto de perfil" class="img-circle profile_img">
+					</div>
+
+						<div class="profile_info">
+							<span>Bienvenido</span>
+							<h2>{{usuario.username}}</h2>
+						</div>
+					</div>
+					<!-- /menu profile quick info -->
+
+					<br />
+
+					<!-- sidebar menu -->
+					<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+						<div class="menu_section">
+							<h3>General</h3>
+							<ul class="nav side-menu">
+								<li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
+									<ul class="nav child_menu">
+										<li><a href="{% url 'gentelella_page' page='index' %}">Dashboard</a></li>
+										<li><a href="{% url 'estimaciones' %}">Calculadora de estimaciones</a></li>
+										<li><a href="{% url 'honorarios_calculator' %}">Calculadora de honorarios</a></li>
+										
+									</ul>
+								</li>
+								<li><a><i class="fa fa-edit"></i> Directorio <span class="fa fa-chevron-down"></span></a>
+									<ul class="nav child_menu">
+										<li><a href="{% url 'gentelella_page' page='cal_estado' %}">Estados</a></li>
+										<li><a href="{% url 'gentelella_page' page='cal_municipio' %}">Municipio</a>
+										</li>
+										<li><a href="{% url 'gentelella_page' page='cal_colonia' %}">Colonia</a></li>
+										<li><a href="{% url 'gentelella_page' page='cal_cp' %}">Codigo postal</a>
+										</li>
+									</ul>
+								</li>
+								<li><a><i class="fa fa-calculator"></i> Estimaciones <span class="fa fa-chevron-down"></span></a>
+									<ul class="nav child_menu">
+										<li><a href="{% url 'gentelella_page' page='cal_estimaciones' %}">Publicaciones</a>
+										</li>
+									</ul>
+								</li>
+								<li><a><i class="fa fa-eye"></i> Vistas <span class="fa fa-chevron-down"></span></a>
+									<ul class="nav child_menu">
+										<li><a href="{% url 'gentelella_page' page='cal_vista_usuarios' %}">Alcaldias</a>
+										</li>
+									</ul>
+								</li>
+								<li><a><i class="fa fa-user"></i> Usuarios <span class="fa fa-chevron-down"></span></a>
+									<ul class="nav child_menu">
+										<li><a href="{% url 'gentelella_page' page='cal_usuarios' %}">Perfiles</a>
+										</li>
+									</ul>
+								</li>
+
+							</ul>
+						</div>
+
+					</div>
+					<!-- /sidebar menu -->
+                    <!-- menu footer buttons -->
+                    <div class="sidebar-footer hidden-small">
+                        <a data-toggle="tooltip" data-placement="top" title="Settings">
+                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                            <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="Lock">
+                            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="Logout"
+                            href="{% url 'signin' %}">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                    <!-- /menu footer buttons -->
+                </div>
+            </div>
+            <!-- top navigation -->
+            <div class="top_nav">
+                <div class="nav_menu">
+                    <div class="nav toggle">
+                        <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                    </div>
+                    <nav class="nav navbar-nav">
+                        <ul class="navbar-right">
+                            <li class="nav-item dropdown open" style="padding-left: 15px;">
+                                <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true"
+                                    id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
+                                    <img src="{{ usuario.profile_picture.url }}" alt="">{{ usuario.username }}
+                                </a>
+                                <div class="dropdown-menu dropdown-usermenu pull-right"
+                                    aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="javascript:;"> Profile</a>
+                                    <a class="dropdown-item" href="javascript:;">
+                                        <span class="badge bg-red pull-right">50%</span>
+                                        <span>Settings</span>
+                                    </a>
+                                    <a class="dropdown-item" href="javascript:;">Help</a>
+                                    <a class="dropdown-item" href="{% url 'signin' %}"><i
+                                            class="fa fa-sign-out pull-right"></i> Log Out</a>
+                                </div>
+                            </li>
+                            <li role="presentation" class="nav-item dropdown open">
+                                <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1"
+                                    data-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-envelope-o"></i>
+                                    <span class="badge bg-green">6</span>
+                                </a>
+                                <ul class="dropdown-menu list-unstyled msg_list" role="menu"
+                                    aria-labelledby="navbarDropdown1">
+                                    <li class="nav-item">
+                                        <a class="dropdown-item">
+                                            <img src="images/img.jpg" alt="">{{ request.user.username }}
+                                                <span class="time">3 mins ago</span>
+                                            </span>
+                                            <span class="message">
+                                                Film festivals used to be do-or-die moments for movie makers. They were
+                                                where...
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="dropdown-item">
+                                            <span class="image"><img src="{% static 'images/img.jpg' %}"
+                                                    alt="Profile Image" /></span>
+                                            <span>
+                                                <span>John Smith</span>
+                                                <span class="time">3 mins ago</span>
+                                            </span>
+                                            <span class="message">
+                                                Film festivals used to be do-or-die moments for movie makers. They were
+                                                where...
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="dropdown-item">
+                                            <span class="image"><img src="{% static 'images/img.jpg' %}"
+                                                    alt="Profile Image" /></span>
+                                            <span>
+                                                <span>John Smith</span>
+                                                <span class="time">3 mins ago</span>
+                                            </span>
+                                            <span class="message">
+                                                Film festivals used to be do-or-die moments for movie makers. They were
+                                                where...
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="dropdown-item">
+                                            <span class="image"><img src="{% static 'images/img.jpg' %}"
+                                                    alt="Profile Image" /></span>
+                                            <span>
+                                                <span>John Smith</span>
+                                                <span class="time">3 mins ago</span>
+                                            </span>
+                                            <span class="message">
+                                                Film festivals used to be do-or-die moments for movie makers. They were
+                                                where...
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <div class="text-center">
+                                            <a class="dropdown-item">
+                                                <strong>See All Alerts</strong>
+                                                <i class="fa fa-angle-right"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- /top navigation -->
+            <!-- page content -->
+<div class="right_col" role="main">
+    <div class="container">
+        <!-- Encabezado y barra de búsqueda -->
+        <div class="row" style="margin-bottom: 15px;">
+            <div class="col-md-6 col-sm-12">
+                <h2 style="color: #003035; font-size: 24px; font-weight: 600; margin: 0;">Vistas Alcaldias Registradas</h2>
+            </div>
+            <div class="col-md-6 col-sm-12 text-right">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Buscar por codigo o colonia...">
+                    <i class="fa fa-search"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mostrar mensajes de éxito o error -->
+        {% if messages %}
+        <div class="alert alert-dismissible {% if message.tags == 'success' %}alert-success{% else %}alert-success{% endif %}" role="alert">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+<!-- Formulario para agregar nueva vista -->
+<div class="card">
+    <div class="collapsible-header" onclick="toggleForm('addForm')">
+        <h3 style="color: #008a8a; font-size: 18px; font-weight: 600; margin: 0;">Agregar Nueva Vista</h3>
+        <i id="addFormIcon" class="fa fa-chevron-down"></i>
+    </div>
+    <form method="post" id="addForm" style="display: none; margin-top: 15px;" class="form-horizontal">
+        {% csrf_token %}
+        <div class="form-row" style="display: flex; flex-wrap: wrap; gap: 20px;">
+            <div class="form-group" style="flex: 1; min-width: 300px;">
+                <label style="color: #003035; font-weight: 600;">Estado</label>
+                <input type="text" id="estado" name="estado" class="form-control" required maxlength="100" style="border: 1px solid #bfc6c7; border-radius: 4px; padding: 10px; color: #0d1d1f; background-color: #fefcef; transition: border-color 0.3s;">
+            </div>
+            <div class="form-group" style="flex: 1; min-width: 300px;">
+                <label style="color: #003035; font-weight: 600;">Alcaldía</label>
+                <input type="text" id="alcaldia" name="alcaldia" class="form-control"  required maxlength="100" style="border: 1px solid #bfc6c7; border-radius: 4px; padding: 10px; color: #0d1d1f; background-color: #fefcef; transition: border-color 0.3s;">
+            </div>
+            <div class="form-group" style="flex: 1; min-width: 300px;">
+                <label style="color: #003035; font-weight: 600;">Colonia</label>
+                <input type="text" id="colonia" name="colonia" class="form-control" required maxlength="100" placeholder="Ingrese Colonia" style="border: 1px solid #bfc6c7; border-radius: 4px; padding: 10px; color: #0d1d1f; background-color: #fefcef; transition: border-color 0.3s;">
+            </div>
+            <div class="form-group" style="flex: 1; min-width: 300px;">
+                <label style="color: #003035; font-weight: 600;">Promedio (MXN)</label>
+                <input type="text" id="promedio_mxn" name="promedio_mxn" class="form-control" required maxlength="30" placeholder="Ingrese Promedio (ej. $26,301)" style="border: 1px solid #bfc6c7; border-radius: 4px; padding: 10px; color: #0d1d1f; background-color: #fefcef; transition: border-color 0.3s;">
+            </div>
+            <div class="form-group" style="flex: 1; min-width: 300px;">
+                <label style="color: #003035; font-weight: 600;">Zona</label>
+                <input type="text" id="zona" name="zona" class="form-control" maxlength="50" placeholder="Ingrese Zona (opcional)" style="border: 1px solid #bfc6c7; border-radius: 4px; padding: 10px; color: #0d1d1f; background-color: #fefcef; transition: border-color 0.3s;">
+            </div>
+            <div class="form-group" style="flex: 1; min-width: 300px; display: flex; gap: 10px;">
+                <button type="submit" class="btn btn-add">Agregar</button>
+                <button type="reset" class="btn btn-cancel">Limpiar</button>
+            </div>
+        </div>
+    </form>
+</div>
+        
+
+        <!-- Tabla de Codigos -->
+        <div class="card table-container">
+            <table class="table" id="municipioTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Estado</th>
+                        <th>Alcaldía</th>
+                        <th>Colonia</th>
+                        <th>Promedio (MXN)</th>
+                        <th>Zona</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vista in vistas %}
+                    <tr>
+                        <td>{{ vista.id }}</td>
+                        <td>{{ vista.estado }}</td>
+                        <td>{{ vista.alcaldia }}</td>
+                        <td>{{ vista.colonia }}</td>
+                        <td>{{ vista.promedio_mxn }}</td>
+                        <td>{{ vista.zona }}</td>
+                        <td>
+                            <a href="{% url 'gentelella_page' page='editar_vistas_alcaldia' %}?editar={{ vista.id }}" class="btn btn-edit btn-sm">Editar</a>
+                            <a href="{% url 'gentelella_page' page='cal_vista_usuarios' %}?eliminar={{ vista.id }}" class="btn btn-delete btn-sm" onclick="return confirm('¿Deseas eliminar esta vista?');">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #949797;">No hay vistas de alcaldías registradas.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- /page content -->
+
+<script>
+function toggleForm(formId) {
+    var form = document.getElementById(formId);
+    var icon = document.getElementById(formId + 'Icon');
+    if (form.style.display === 'none') {
+        form.style.display = 'block';
+        icon.classList.remove('fa-chevron-down');
+        icon.classList.add('fa-chevron-up');
+    } else {
+        form.style.display = 'none';
+        icon.classList.remove('fa-chevron-up');
+        icon.classList.add('fa-chevron-down');
+    }
+}
+
+document.getElementById('searchInput').addEventListener('input', function() {
+    var input = this.value.toLowerCase();
+    var table = document.getElementById('municipioTable');
+    var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+    for (var i = 0; i < rows.length; i++) {
+        var cells = rows[i].getElementsByTagName('td');
+        var match = false;
+        for (var j = 0; j < cells.length - 1; j++) { // Excluir columna de acciones
+            if (cells[j].textContent.toLowerCase().indexOf(input) > -1) {
+                match = true;
+                break;
+            }
+        }
+        rows[i].style.display = match ? '' : 'none';
+    }
+});
+</script>
+
+ <!-- FIN page content -->
+
+            <!-- JavaScript -->
+            <script>
+                function toggleForm(formId) {
+                    const form = document.getElementById(formId);
+                    const icon = document.getElementById(formId + 'Icon');
+                    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+                    icon.classList.toggle('fa-chevron-down');
+                    icon.classList.toggle('fa-chevron-up');
+                }
+
+                document.getElementById('searchInput').addEventListener('keyup', function () {
+                    let searchValue = this.value.toLowerCase();
+                    let table = document.getElementById('municipioTable');
+                    let rows = table.getElementsByTagName('tr');
+
+                    for (let i = 1; i < rows.length; i++) {
+                        let cells = rows[i].getElementsByTagName('td');
+                        let match = false;
+
+                        for (let j = 1; j < cells.length - 1; j++) {
+                            if (cells[j].textContent.toLowerCase().includes(searchValue)) {
+                                match = true;
+                                break;
+                            }
+                        }
+                        rows[i].style.display = match ? '' : 'none';
+                    }
+                });
+            </script>
+
+            <!-- jQuery -->
+            <script src="{% static 'vendors/jquery/dist/jquery.min.js' %}"></script>
+            <!-- Bootstrap -->
+            <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+            <!-- FastClick -->
+            <script src="{% static 'vendors/fastclick/lib/fastclick.js' %}"></script>
+            <!-- NProgress -->
+            <script src="{% static 'vendors/nprogress/nprogress.js' %}"></script>
+            <!-- bootstrap-progressbar -->
+            <script src="{% static 'vendors/bootstrap-progressbar/bootstrap-progressbar.min.js' %}"></script>
+            <!-- iCheck -->
+            <script src="{% static 'vendors/iCheck/icheck.min.js' %}"></script>
+            <!-- bootstrap-daterangepicker -->
+            <script src="{% static 'vendors/moment/min/moment.min.js' %}"></script>
+            <script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+            <!-- bootstrap-wysiwyg -->
+            <script src="{% static 'vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js' %}"></script>
+            <script src="{% static 'vendors/jquery.hotkeys/jquery.hotkeys.js' %}"></script>
+            <script src="{% static 'vendors/google-code-prettify/src/prettify.js' %}"></script>
+            <!-- jQuery Tags Input -->
+            <script src="{% static 'vendors/jquery.tagsinput/src/jquery.tagsinput.js' %}"></script>
+            <!-- Switchery -->
+            <script src="{% static 'vendors/switchery/dist/switchery.min.js' %}"></script>
+            <!-- Select2 -->
+            <script src="{% static 'vendors/select2/dist/js/select2.full.min.js' %}"></script>
+            <!-- Parsley -->
+            <script src="{% static 'vendors/parsleyjs/dist/parsley.min.js' %}"></script>
+            <!-- Autosize -->
+            <script src="{% static 'vendors/autosize/dist/autosize.min.js' %}"></script>
+            <!-- jQuery autocomplete -->
+            <script src="{% static 'vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js' %}"></script>
+            <!-- starrr -->
+            <script src="{% static 'vendors/starrr/dist/starrr.js' %}"></script>
+            <!-- Custom Theme Scripts -->
+            <script src="{% static 'js/custom.min.js' %}"></script>
+
+            <script>
+                $(document).ready(function () {
+                    $('#estado').change(function () {
+                        const estadoId = $(this).val();
+                        $('#municipio').html('<option>Selecciona un municipio</option>');
+                        $('#colonia').html('<option>Selecciona una colonia</option>');
+                        $('#codigo').val('');
+
+                        $.get('{% url "obtener_municipios" %}', { estado_id: estadoId }, function (data) {
+                            $.each(data, function (i, municipio) {
+                                $('#municipio').append(`<option value="${municipio.id_municipio}">${municipio.nombre}</option>`);
+                            });
+                        });
+                    });
+
+                    $('#municipio').change(function () {
+                        const municipioId = $(this).val();
+                        $('#colonia').html('<option>Selecciona una colonia</option>');
+                        $('#codigo').val('');
+
+                        $.get('{% url "obtener_colonias" %}', { municipio_id: municipioId }, function (data) {
+                            $.each(data, function (i, colonia) {
+                                $('#colonia').append(`<option value="${colonia.id_colonia}">${colonia.nombre}</option>`);
+                            });
+                        });
+                    });
+
+                    $('#colonia').change(function () {
+                        const coloniaId = $(this).val();
+                        $('#codigo').val('');
+
+                        $.get('{% url "obtener_codigos_postales" %}', { colonia_id: coloniaId }, function (data) {
+                            if (data.length > 0) {
+                                $('#codigo').val(data[0].codigo); // toma el primer código asociado
+                            }
+                        });
+                    });
+                });
+            </script>
+             {# Script para cierre de sesión por inactividad #}
+            <script>
+            const logoutUrl = "{% url 'signout' %}";
+            </script>
+            <script src="{% static 'js/tiempo.js' %}"></script>
+            {# Fin Script para cierre de sesión por inactividad #}
+        </div>
+    </div>
+</body>
+
+</html>
