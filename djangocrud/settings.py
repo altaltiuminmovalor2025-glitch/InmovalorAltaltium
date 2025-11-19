@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-(oa(omhdw75#3qzk_p-6zfdfmvj#%tn=oci!ww+ssog(ib%-o=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['altaltiuminmovalor.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['inmovaloraltaltium-1.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -152,4 +152,5 @@ AUTHENTICATION_BACKENDS = [
 #Tiempo de limite para cerrar sesion   SON 5 HORAS Y SE CUENTA EN SEGUNDOS
 SESSION_COOKIE_AGE = 18000
 # Se reinicia el contador si el usuario interactúa
+
 SESSION_SAVE_EVERY_REQUEST = True
