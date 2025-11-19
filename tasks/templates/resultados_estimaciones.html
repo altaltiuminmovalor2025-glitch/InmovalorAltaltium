@@ -1,0 +1,1605 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inmovalor | Resultados de Evaluación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#003035",
+                        secondary: "#008a8a",
+                        accent: "#00cccc",
+                        lightaccent: "#52b3c0",
+                        dark: "#0d1d1f",
+                        black: "#000000",
+                        lightgray: "#bfc6c7",
+                        gray: "#949797",
+                        white: "#ffffff",
+                        offwhite: "#f8fafc",
+                        softgray: "#e5e7eb",
+                    },
+                    fontFamily: {
+                        sans: ["Montserrat", "sans-serif"],
+                        heading: ["Poppins", "sans-serif"],
+                    },
+                    boxShadow: {
+                        custom: "0 8px 24px rgba(0,0,0,0.1)",
+                        "custom-hover": "0 12px 32px rgba(0,0,0,0.15)",
+                        "neon-glow": "0 0 12px rgba(0, 204, 204, 0.5)",
+                        "card-glow": "0 4px 16px rgba(0, 204, 204, 0.2)",
+                        "table-glow": "0 4px 12px rgba(0, 204, 204, 0.3)",
+                    },
+                    animation: {
+                        "fade-in": "fadeIn 0.8s ease-out",
+                        "slide-up": "slideUp 0.6s ease-out",
+                        "pulse-glow": "pulseGlow 2s infinite",
+                        "neon-shine": "neonShine 1.5s infinite",
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            "0%": { opacity: "0" },
+                            "100%": { opacity: "1" },
+                        },
+                        slideUp: {
+                            "0%": { transform: "translateY(20px)", opacity: "0" },
+                            "100%": { transform: "translateY(0)", opacity: "1" },
+                        },
+                        pulseGlow: {
+                            "0%, 100%": { boxShadow: "0 0 12px rgba(0, 204, 204, 0.3)" },
+                            "50%": { boxShadow: "0 0 20px rgba(0, 204, 204, 0.5)" },
+                        },
+                        neonShine: {
+                            "0%": { boxShadow: "0 0 10px rgba(0, 204, 204, 0.3)" },
+                            "50%": { boxShadow: "0 0 20px rgba(0, 204, 204, 0.6)" },
+                            "100%": { boxShadow: "0 0 10px rgba(0, 204, 204, 0.3)" },
+                        },
+                    },
+                    backdropFilter: {
+                        'blur': 'blur(8px)',
+                    },
+                },
+            },
+        };
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f8fafc;
+            color: #0d1d1f;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            width: 80px;
+            background: rgba(0, 48, 53, 0.85);
+            color: #ffffff;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 1rem 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+            border-right: 1px solid rgba(0, 204, 204, 0.2);
+            overflow: hidden;
+        }
+
+        .sidebar:hover, .sidebar.expanded {
+            width: 250px;
+        }
+
+        .sidebar h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding: 0 1rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover h1, .sidebar.expanded h1 {
+            opacity: 1;
+        }
+
+        .sidebar .logo-icon {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            padding: 0 1rem;
+        }
+
+        .sidebar .logo-icon i {
+            font-size: 1.8rem;
+            color: #00cccc;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar:hover .logo-icon i, .sidebar.expanded .logo-icon i {
+            transform: scale(1.1);
+        }
+
+        .sidebar .nav-container {
+            display: flex;
+            flex-direction: column;
+            padding: 0 0.5rem;
+        }
+
+        .sidebar a, .sidebar button {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .sidebar a i, .sidebar button i {
+            min-width: 40px;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            margin-right: 0;
+            text-align: center;
+        }
+
+        .sidebar:hover a i, .sidebar.expanded a i,
+        .sidebar:hover button i, .sidebar.expanded button i {
+            margin-right: 0.5rem;
+        }
+
+        .sidebar a span, .sidebar button span {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover a span, .sidebar.expanded a span,
+        .sidebar:hover button span, .sidebar.expanded button span {
+            opacity: 1;
+        }
+
+        .sidebar a:hover, .sidebar button:hover {
+            background: rgba(0, 204, 204, 0.15);
+            transform: none;
+            box-shadow: 0 0 10px rgba(0, 204, 204, 0.2);
+        }
+
+        .sidebar a.active, .sidebar button.active {
+            background: rgba(0, 204, 204, 0.25);
+        }
+
+        .sidebar-toggle {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: rgba(0, 204, 204, 0.2);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle:hover {
+            background: rgba(0, 204, 204, 0.4);
+        }
+
+        .main-content {
+            margin-left: 80px;
+            padding: 1.5rem;
+            width: calc(100% - 80px);
+            transition: margin-left 0.3s ease, width 0.3s ease;
+        }
+
+        .sidebar.expanded ~ .main-content,
+        .sidebar:hover ~ .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+        }
+
+        .toggle-sidebar {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1100;
+            background: #008a8a;
+            color: #ffffff;
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 896px) {
+            .sidebar {
+                width: 250px;
+                transform: translateX(-100%);
+                z-index: 1000;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .toggle-sidebar {
+                display: flex;
+            }
+            .sidebar h1, 
+            .sidebar a span, 
+            .sidebar button span {
+                opacity: 1;
+            }
+            .sidebar a i, 
+            .sidebar button i {
+                margin-right: 0.5rem;
+            }
+            .sidebar-toggle {
+                display: none;
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 204, 204, 0.1);
+            padding: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0, 204, 204, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 204, 204, 0.15);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .map-container {
+            height: 400px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            border: none;
+        }
+
+        .loading-map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 48, 53, 0.85);
+            color: #ffffff;
+            z-index: 10;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid #00cccc;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .value-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1.2rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 1rem;
+            background: rgba(0, 204, 204, 0.15);
+            color: #003035;
+            border: 1px solid rgba(0, 204, 204, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 204, 204, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .value-pill:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 204, 204, 0.3);
+            background: rgba(0, 204, 204, 0.25);
+        }
+
+        .button {
+            background: linear-gradient(45deg, #008a8a, #00cccc);
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 204, 204, 0.4);
+        }
+
+        .details-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 0.5rem;
+            background: transparent;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .details-table thead {
+            display: none;
+        }
+
+        .details-table tr {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .details-table tr:hover {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(0, 204, 204, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .details-table td {
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: #0d1d1f;
+            border: none;
+            vertical-align: middle;
+        }
+
+        .details-table td:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+            width: 50px;
+            text-align: center;
+        }
+
+        .details-table td:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        .details-table .feature-column {
+            font-weight: 600;
+            color: #008a8a;
+            white-space: nowrap;
+            padding-right: 1rem;
+        }
+
+        .details-table i {
+            color: #00cccc;
+            font-size: 1.1rem;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .map-container {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 896px) {
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #008a8a;
+            margin-bottom: 0.75rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            width: 40px;
+            height: 3px;
+            background: #00cccc;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        .copy-button {
+            background: none;
+            border: none;
+            color: #00cccc;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-left: 0.5rem;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .copy-button:hover {
+            color: #52b3c0;
+            transform: scale(1.1);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #008a8a;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            z-index: 1200;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .address-banner {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.75rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1rem;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0, 204, 204, 0.1);
+            z-index: 500;
+        }
+
+        .error-card {
+            background: #ffffff;
+            border: 1px solid #DC2626;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        #honorarios {
+            background: #E6ECEF;
+            padding: 1rem 0.5rem;
+            border-top: 1px solid #e5e7eb;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .main-wrapper {
+            background: #F8FAFA;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            width: 100%;
+            margin: 0.5rem auto;
+            border: 1px solid #D1D5DB;
+            box-sizing: border-box;
+        }
+
+        .header-cotizacion {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 2px solid #067c7c;
+        }
+
+        .main-title {
+            color: #333333;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .calc-text {
+            color: #067c7c;
+        }
+
+        .input-form-section {
+            background: #FFFFFF;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #4B5563;
+            font-size: 0.8rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .required-field::after {
+            content: " *";
+            color: #067c7c;
+        }
+
+        .form-control, 
+        .form-select {
+            background: #F9FAFB;
+            border: 1px solid #D1D5DB;
+            color: #333333;
+            padding: 0.4rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .form-control::placeholder {
+            color: #9CA3AF;
+        }
+
+        .form-control:focus, 
+        .form-select:focus {
+            border-color: #067c7c;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(0, 204, 204, 0.25);
+            background: #FFFFFF;
+        }
+
+        .results-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-block {
+            background: #FFFFFF;
+            padding: 0.75rem;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid #D1D5DB;
+            overflow-x: auto;
+        }
+
+        .section-title {
+            color: #067c7c;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            text-align: left;
+            padding-bottom: 0.3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #067c7c;
+            border-radius: 1px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 0.5rem;
+            color: #333333;
+            font-size: 0.8rem;
+            table-layout: auto;
+        }
+
+        th {
+            background: linear-gradient(90deg, #003035, #008a8a);
+            color: #ffffff;
+            font-weight: 600;
+            padding: 0.3rem;
+            text-align: left;
+            font-size: 0.8rem;
+        }
+
+        td {
+            padding: 0.4rem 0.3rem;
+            text-align: left;
+            border-bottom: 1px solid #E5E7EB;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .result-value {
+            color: #067c7c;
+            font-weight: 600;
+            padding-left: 0.3rem;
+        }
+
+        .copy-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 0.3rem;
+            color: #067c7c;
+            font-size: 0.8rem;
+            transition: color 0.3s ease, transform 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .copy-button:hover {
+            color: #08bbbb;
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+        .total-row td {
+            border-top: 2px solid #067c7c;
+            font-weight: 700;
+            color: #333333;
+            padding-top: 0.6rem;
+            font-size: 0.9rem;
+            background-color: rgba(0, 204, 204, 0.1);
+            box-shadow: 0 0 8px rgba(0, 204, 204, 0.3);
+            text-align: center;
+        }
+
+        .total-row .copy-button {
+            font-size: 0.9rem;
+            margin-left: 0.3rem;
+        }
+
+        .ganancia-container {
+            background: #FFFFFF;
+            padding: 0.75rem;
+            border-radius: 6px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid #D1D5DB;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .ganancia-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .ganancia-label {
+            color: #333333;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+
+        .ganancia-value {
+            color: #067c7c;
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1;
+            padding-bottom: 0.3rem;
+            position: relative;
+        }
+
+        .ganancia-value::after {
+            content: "";
+            display: block;
+            width: 50%;
+            max-width: 100px;
+            height: 2px;
+            background: #067c7c;
+            margin: 0.3rem auto 0;
+            border-radius: 2px;
+        }
+
+        #cesion-derechos-section {
+            display: none;
+        }
+
+        #cesion-derechos-section.active {
+            display: block;
+            margin-top: 1rem;
+        }
+
+        .error-message {
+            color: #DC2626;
+            font-size: 0.75rem;
+            margin-top: 0.2rem;
+            display: none;
+        }
+
+        .fade {
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        .fade.hidden {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .fade:not(.hidden) {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #generate-report, #generate-complete-report {
+            display: flex;
+        }
+
+        #generate-report.hidden, #generate-complete-report.hidden {
+            display: none;
+        }
+
+        @media (min-width: 896px) {
+            .input-form-section {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.75rem;
+            }
+            .results-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            .ganancia-container {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+            #cesion-derechos-section.active {
+                grid-column: 1 / -1;
+            }
+            .main-wrapper {
+                padding: 1.5rem;
+                max-width: 1500px;
+            }
+            .header-cotizacion {
+                margin-bottom: 1.5rem;
+                padding-bottom: 0.5rem;
+            }
+            .main-title {
+                font-size: 1.9rem;
+                letter-spacing: 2px;
+            }
+            .section-title {
+                font-size: 1.1rem;
+                margin-bottom: 0.8rem;
+                padding-bottom: 0.4rem;
+            }
+            .section-block {
+                padding: 1.2rem;
+            }
+            .ganancia-container {
+                padding: 1.5rem;
+            }
+            .ganancia-value {
+                font-size: 2.5rem;
+            }
+            table {
+                font-size: 0.9rem;
+            }
+            th, td {
+                padding: 0.6rem 0.4rem;
+            }
+            .copy-button {
+                font-size: 1rem;
+                margin-left: 0.5rem;
+            }
+            .total-row td {
+                font-size: 1.1rem;
+                padding-top: 0.8rem;
+            }
+            .total-row .copy-button {
+                font-size: 1.1rem;
+                margin-left: 0.5rem;
+            }
+            #honorarios {
+                padding: 2rem 0;
+            }
+        }
+
+        @media (max-width: 896px) {
+            .section-block {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            table {
+                min-width: 300px;
+            }
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            color: white;
+            font-size: 1.2rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #00cccc;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast global -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p id="loadingText">Preparando documento...</p>
+    </div>
+
+    <!-- Botón para toggle en móviles -->
+    <button class="toggle-sidebar" aria-label="Abrir menú de navegación">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="logo-icon">
+            <i class="fas fa-home"></i>
+        </div>
+        <h1 class="animate-slide-up">Inmovalor</h1>
+        <div class="nav-container">
+            <a href="{% url 'estimaciones' %}" class="animate-slide-up">
+                <i class="fas fa-arrow-left"></i>
+                <span>Nueva Evaluación</span>
+            </a>
+            <a href="{% url 'reporte_individual' propiedad.id_propiedad %}" id="generate-report" class="animate-slide-up">
+                <i class="fa fa-file-pdf"></i>
+                <span>Reporte Estimación</span>
+            </a>
+            <button id="toggle-honorarios" class="animate-slide-up" aria-expanded="false">
+                <i class="fas fa-calculator"></i>
+                <span>Cálculo de Honorarios</span>
+            </button>
+            <a href="{% url 'reporte_completo' propiedad.id_propiedad %}" id="generate-complete-report" class="animate-slide-up hidden">
+                <i class="fa fa-file-pdf"></i>
+                <span>Reporte Completo</span>
+            </a>
+        </div>
+        <button class="sidebar-toggle" id="toggle-sidebar" aria-label="Expandir menú">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        <!-- Banner de Dirección -->
+        <div class="address-banner animate-slide-up">
+            <div class="flex items-center">
+                <i class="fas fa-map-marker-alt text-accent mr-3 text-xl"></i>
+                <div>
+                    <p class="font-semibold text-dark text-base">{{ propiedad.calle|escape }}, {{ propiedad.id_colonia.nombre|escape }}</p>
+                    <p class="text-gray text-sm">{{ propiedad.id_municipio.nombre|escape }}, {{ propiedad.id_estado.nombre|escape }} (CP: {{ propiedad.id_codigo_postal.codigo|escape }})</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Título Principal -->
+        <h2 class="text-2xl md:text-3xl font-bold text-primary mb-6 animate-fade-in">Resultados de Evaluación</h2>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="card mb-4 animate-slide-up">
+            <div class="flex items-center p-3">
+                <i class="fas fa-info-circle text-accent mr-3 text-lg"></i>
+                <span class="text-dark text-sm">{{ message }}</span>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if propiedad %}
+        <!-- Valores Aproximados -->
+        <div class="values-grid">
+            <div class="card animate-slide-up">
+                <h3 class="section-title">Valor Comercial Aproximado</h3>
+                <div class="flex items-center">
+                    <span class="value-pill" id="valorComercialPill" data-value="{{ propiedad.valor_comercial|default:'0.00'|floatformat:2 }}">{{ propiedad.valor_comercial|default:'$0.00'|floatformat:2 }}</span>
+                    <button class="copy-button" aria-label="Copiar valor comercial" onclick="copyToClipboard(document.getElementById('valorComercialPill').textContent, '¡Valor copiado!')">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card animate-slide-up">
+                <h3 class="section-title">Valor Judicial Aproximado</h3>
+                <div class="flex items-center">
+                    <span class="value-pill" id="valorJudicialPill" data-value="{{ propiedad.valor_judicial|default:'0.00'|floatformat:2 }}">{{ propiedad.valor_judicial|default:'$0.00'|floatformat:2 }}</span>
+                    <button class="copy-button" aria-label="Copiar valor judicial" onclick="copyToClipboard(document.getElementById('valorJudicialPill').textContent, '¡Valor copiado!')">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mapa y Detalles -->
+        <div class="content-grid">
+            <!-- Mapa -->
+            <div class="card animate-slide-up">
+                <h3 class="section-title">Ubicación</h3>
+                <div class="map-container">
+                    <div class="loading-map" id="loadingMap">
+                        <div class="loading-spinner"></div>
+                        <h3>Cargando mapa...</h3>
+                        <p>Por favor espera mientras se carga la ubicación</p>
+                    </div>
+                    <iframe id="map" allowfullscreen="" loading="lazy" title="Mapa de ubicación"></iframe>
+                </div>
+            </div>
+
+            <!-- Detalles de la Propiedad -->
+            <div class="card animate-slide-up">
+                <h3 class="section-title">Detalles de la Propiedad</h3>
+                <table class="details-table">
+                    <thead class="sr-only">
+                        <tr>
+                            <th scope="col">Ícono</th>
+                            <th scope="col">Característica</th>
+                            <th scope="col">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><i class="fas fa-building"></i></td>
+                            <td class="feature-column">Tipo</td>
+                            <td>{{ propiedad.tipo_propiedad|escape }}</td>
+                        </tr>
+                        {% if propiedad.tipo_propiedad != 'Terreno' %}
+                        <tr>
+                            <td><i class="fas fa-bed"></i></td>
+                            <td class="feature-column">Recámaras</td>
+                            <td>{{ propiedad.recamaras|escape }}</td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-bath"></i></td>
+                            <td class="feature-column">Sanitarios</td>
+                            <td>{{ propiedad.sanitarios|escape }}</td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-car"></i></td>
+                            <td class="feature-column">Estacionamiento</td>
+                            <td>{{ propiedad.estacionamiento|escape }}</td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-ruler-combined"></i></td>
+                            <td class="feature-column">Construcción</td>
+                            <td>{{ propiedad.construccion|escape }} m²</td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-home"></i></td>
+                            <td class="feature-column">Estado de Conservación</td>
+                            <td>{{ propiedad.estado_conservacion|default:"No especificado"|escape }}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td><i class="fas fa-vector-square"></i></td>
+                            <td class="feature-column">Terreno</td>
+                            <td>{{ propiedad.terreno|escape }} m²</td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-comment"></i></td>
+                            <td class="feature-column">Comentarios</td>
+                            <td>{{ propiedad.comentarios|default:"Sin comentarios adicionales."|escape }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="error-card animate-slide-up">
+            <i class="fas fa-exclamation-circle text-red-600 text-2xl mb-3"></i>
+            <h3 class="font-semibold text-dark text-base mb-2">Datos no disponibles</h3>
+            <p class="text-gray text-sm mb-4">No se encontraron datos de la propiedad solicitada.</p>
+            <a href="{% url 'estimaciones' %}" class="button">
+                <i class="fas fa-arrow-left mr-1"></i> Volver
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Calculadora de Honorarios -->
+        <section id="honorarios" class="hidden fade">
+            <div class="container mx-auto px-2 sm:px-4">
+                <div class="main-wrapper">
+                    <header class="header-cotizacion">
+                        <h1 class="main-title"><span class="calc-text">CALCULADORA</span> DE HONORARIOS</h1>
+                    </header>
+
+                    <form class="input-form-section" id="calculator-form" novalidate>
+                        {% csrf_token %}
+                        <div>
+                            <label for="calcType" class="form-label required-field">Tipo de Cálculo</label>
+                            <select id="calcType" name="calcType" class="form-select" required>
+                                <option value="sentencia" {% if calc_type == 'sentencia' %}selected{% endif %}>Sentencia</option>
+                                <option value="adjudicado" {% if calc_type == 'adjudicado' %}selected{% endif %}>Adjudicado</option>
+                                <option value="derechos_cobranza" {% if calc_type == 'derechos_cobranza' %}selected{% endif %}>Derechos de Cobranza</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="valorComercial" class="form-label required-field">Valor Comercial $</label>
+                            <input type="text" id="valorComercial" name="valorComercialDisplay" class="form-control" readonly value="{{ valor_comercial|default:'$0.00' }}">
+                            <input type="hidden" id="valorComercialHidden" name="valorComercial" value="{{ propiedad.valor_comercial|default:'0.00' }}">
+                            <div class="error-message" id="valorComercialError">Por favor, ingresa un valor numérico válido.</div>
+                        </div>
+                        <div>
+                            <label for="precioDeSesion" class="form-label required-field">Precio de Cesión $</label>
+                            <input type="text" id="precioDeSesion" name="precioDeSesion" class="form-control" value="{{ precio_de_sesion|default:'0.00' }}" required placeholder="Ingresa el precio">
+                            <input type="hidden" id="precioDeSesionHidden" name="precioDeSesion" value="{{ precio_de_sesion|default:'0.00' }}">
+                            <div class="error-message" id="precioDeSesionError">Por favor, ingresa un valor numérico válido.</div>
+                        </div>
+                    </form>
+
+                    <div class="results-grid" id="results-grid-container">
+                        <div id="descripcion-section" class="section-block">
+                            <span class="section-title">DESCRIPCIÓN</span>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>Valor Comercial</td>
+                                        <td><span class="result-value" id="displayValorComercial">{{ valor_comercial|default:'$0.00' }}</span>
+                                            <button class="copy-button" aria-label="Copiar valor comercial" onclick="copyToClipboard(document.getElementById('displayValorComercial').textContent, '¡Valor copiado!')">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Valor Judicial</td>
+                                        <td><span class="result-value" id="displayValorJudicial">{{ valor_judicial|default:'$0.00' }}</span>
+                                            <button class="copy-button" aria-label="Copiar valor judicial" onclick="copyToClipboard(document.getElementById('displayValorJudicial').textContent, '¡Valor copiado!')">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Honorarios</td>
+                                        <td><span class="result-value" id="displayHonorarios">{{ honorarios|default:'$0.00' }}</span>
+                                            <button class="copy-button" aria-label="Copiar honorarios" onclick="copyToClipboard(document.getElementById('displayHonorarios').textContent, '¡Valor copiado!')">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cesión de Derechos</td>
+                                        <td><span class="result-value" id="displayCession">{{ precio_de_sesion|default:'$0.00' }}</span>
+                                            <button class="copy-button" aria-label="Copiar cesión de derechos" onclick="copyToClipboard(document.getElementById('displayCession').textContent, '¡Valor copiado!')">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div id="parcialidades-section" class="section-block">
+                            <span class="section-title">PARCIALIDADES</span>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>1er Pago (75%)</td>
+                                        <td>Propuesta Legal</td>
+                                        <td><span class="result-value" id="displayPrimerPago">{{ firma|default:'$0.00' }}</span>
+                                            <button class="copy-button" aria-label="Copiar primer pago" onclick="copyToClipboard(document.getElementById('displayPrimerPago').textContent, '¡Valor copiado!')">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2do Pago</td>
+                                        <td>Cesión de derechos</td>
+                                        <td><span class="result-value" id="displaySegundoPago">{{ precio_de_sesion|default:'$0.00' }}</span>
+                                            <button class="copy-button" aria-label="Copiar segundo pago" onclick="copyToClipboard(document.getElementById('displaySegundoPago').textContent, '¡Valor copiado!')">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>3er Pago (25%)</td>
+                                        <td>Entrega</td>
+                                        <td><span class="result-value" id="displayTercerPago">{{ entrega|default:'$0.00' }}</span>
+                                            <button class="copy-button" aria-label="Copiar tercer pago" onclick="copyToClipboard(document.getElementById('displayTercerPago').textContent, '¡Valor copiado!')">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr class="total-row">
+                                        <td colspan="3">
+                                            PRECIO TOTAL: <span class="result-value" id="displayTotal">{{ total|default:'$0.00' }}</span>
+                                            <button class="copy-button" aria-label="Copiar precio total" onclick="copyToClipboard(document.getElementById('displayTotal').textContent, '¡Valor copiado!')">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div id="cesion-derechos-section" class="section-block">
+                            <span class="section-title">CESIÓN DE DERECHOS DE COBRANZA</span>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>Valor Extrajudicial</td>
+                                        <td><span class="result-value" id="displayValorExt">{{ valor_ext|default:'$0.00' }}</span>
+                                            <button class="copy-button" aria-label="Copiar valor extrajudicial" onclick="copyToClipboard(document.getElementById('displayValorExt').textContent, '¡Valor copiado!')">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cotización (50%)</td>
+                                        <td><span class="result-value" id="displayCotizacion">{{ cotizacion|default:'$0.00' }}</span>
+                                            <button class="copy-button" aria-label="Copiar cotización" onclick="copyToClipboard(document.getElementById('displayCotizacion').textContent, '¡Valor copiado!')">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="ganancia-container" class="ganancia-container">
+                        <div class="ganancia-item">
+                            <span class="ganancia-label">GANANCIA</span>
+                            <span class="ganancia-value" id="displayGanancia">{{ ganancia|default:'0.00%' }}</span>
+                            <button class="copy-button" aria-label="Copiar ganancia" onclick="copyToClipboard(document.getElementById('displayGanancia').textContent, '¡Valor copiado!')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="ganancia-item">
+                            <span class="ganancia-label">Costo de Compra</span>
+                            <span class="ganancia-value" id="displayCostoCompra">{{ porcentaje_vc|default:'0.00%' }}</span>
+                            <button class="copy-button" aria-label="Copiar costo de compra" onclick="copyToClipboard(document.getElementById('displayCostoCompra').textContent, '¡Valor copiado!')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-primary text-white py-4 mt-8">
+            <div class="container mx-auto px-4 text-center">
+                <p class="text-sm text-lightgray animate-fade-in">© 2025 Inmovalor. Todos los derechos reservados.</p>
+            </div>
+        </footer>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Toggle sidebar en móviles
+            $('.toggle-sidebar').on('click', function() {
+                console.log('Toggle sidebar clicked at', new Date().toLocaleTimeString());
+                $('.sidebar').toggleClass('active');
+                $(this).find('i').toggleClass('fa-bars fa-times');
+            });
+
+            // Toggle sidebar expandida en pantallas grandes
+            $('#toggle-sidebar').on('click', function() {
+                console.log('Sidebar toggle clicked (desktop)');
+                $('.sidebar').toggleClass('expanded');
+                $(this).find('i').toggleClass('fa-chevron-right fa-chevron-left');
+            });
+
+            // Cerrar sidebar al hacer clic fuera en móviles
+            $(document).on('click', function(event) {
+                if (window.innerWidth <= 896 && $('.sidebar').hasClass('active') && 
+                    !$(event.target).closest('.sidebar').length && 
+                    !$(event.target).closest('.toggle-sidebar').length) {
+                    console.log('Clicked outside sidebar, closing');
+                    $('.sidebar').removeClass('active');
+                    $('.toggle-sidebar i').removeClass('fa-times').addClass('fa-bars');
+                }
+            });
+
+            // Inicializar mapa
+            function inicializarMapa() {
+                const mapFrame = document.getElementById('map');
+                const loadingMap = document.getElementById('loadingMap');
+                const address = "{{ propiedad.calle|escapejs }}, {{ propiedad.id_colonia.nombre|escapejs }}, {{ propiedad.id_municipio.nombre|escapejs }}, {{ propiedad.id_estado.nombre|escapejs }}".trim();
+                const isCDMX = "{{ propiedad.id_estado.nombre|escapejs }}" === "Ciudad de México";
+                const prefix = isCDMX ? "Alcaldía " : "Municipio ";
+
+                if (!address || address === ',,,') {
+                    $('#map').replaceWith('<p class="text-red-600">No se pudo cargar el mapa: Dirección incompleta</p>');
+                    $('#loadingMap').hide();
+                    return;
+                }
+
+                loadingMap.style.display = 'flex';
+                mapFrame.style.opacity = '0.5';
+
+                const coloniaCoords = {
+                    "Ciudad de México": {
+                        "Álvaro Obregón": {
+                            "San Ángel": "19.3467,-99.1900",
+                            "Jardines del Pedregal": "19.3308,-99.2100"
+                        },
+                        "Benito Juárez": {
+                            "Del Valle": "19.3933,-99.1642"
+                        }
+                    }
+                };
+
+                const centerPoint = (coloniaCoords["{{ propiedad.id_estado.nombre|escapejs }}"] && 
+                                    coloniaCoords["{{ propiedad.id_estado.nombre|escapejs }}"]["{{ propiedad.id_municipio.nombre|escapejs }}"] && 
+                                    coloniaCoords["{{ propiedad.id_estado.nombre|escapejs }}"]["{{ propiedad.id_municipio.nombre|escapejs }}"]["{{ propiedad.id_colonia.nombre|escapejs }}"]) ? 
+                                    coloniaCoords["{{ propiedad.id_estado.nombre|escapejs }}"]["{{ propiedad.id_municipio.nombre|escapejs }}"]["{{ propiedad.id_colonia.nombre|escapejs }}"] : '23.6345,-102.5528';
+                const query = encodeURIComponent(address);
+                const mapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5000!2d${centerPoint.split(',')[1]}!3d${centerPoint.split(',')[0]}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s${query}!5e0!3m2!1ses!2smx!4v${Date.now()}&z=16`;
+
+                mapFrame.src = mapUrl;
+                mapFrame.onload = () => {
+                    loadingMap.style.display = 'none';
+                    mapFrame.style.opacity = '1';
+                };
+                mapFrame.onerror = () => {
+                    console.error('Error al cargar el mapa:', mapUrl);
+                    loadingMap.style.display = 'none';
+                    mapFrame.style.opacity = '1';
+                    $('#toast').text('Error al cargar el mapa. Intenta de nuevo.').addClass('show').css('background', '#DC2626');
+                    setTimeout(() => $('#toast').removeClass('show'), 3000);
+                };
+            }
+
+            // Copiar al portapapeles
+            window.copyToClipboard = function(value, message) {
+                let textToCopy = value;
+                if (!isNaN(parseFloat(value)) && !value.includes('%')) {
+                    textToCopy = formatCurrency(parseFloat(value));
+                } else if (value.includes('%')) {
+                    textToCopy = value;
+                }
+
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    const toast = $('#toast');
+                    toast.text(message).css('background', '#008a8a').addClass('show');
+                    setTimeout(() => toast.removeClass('show'), 2000);
+                }).catch(err => {
+                    console.error('Error al copiar:', err);
+                    const toast = $('#toast');
+                    toast.text('Error al copiar. Intenta de nuevo.').css('background', '#DC2626').addClass('show');
+                    setTimeout(() => toast.removeClass('show'), 3000);
+                });
+            };
+
+            // Formatear números
+            function getCleanNumber(value) {
+                if (typeof value !== 'string') return parseFloat(value) || 0;
+                return parseFloat(value.replace(/[^0-9.-]+/g, '').replace(/,/g, '')) || 0;
+            }
+
+            function formatCurrency(value) {
+                return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 2 }).format(value);
+            }
+
+            function formatPercentage(value) {
+                return new Intl.NumberFormat('es-MX', { style: 'percent', minimumFractionDigits: 2 }).format(value / 100);
+            }
+
+            // Formatear input en tiempo real
+            function formatNumberInput(input, hiddenInput) {
+                input.addEventListener('input', function() {
+                    let value = this.value.replace(/[^0-9.]/g, '');
+                    let parts = value.split('.');
+                    if (parts.length > 2) value = parts[0] + '.' + parts.slice(1).join('');
+                    if (value === '' || value === '.') {
+                        this.value = value;
+                        hiddenInput.value = 0;
+                        calculateResults();
+                        return;
+                    }
+                    let formattedValue = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    if (parts[1]) formattedValue += '.' + parts[1];
+                    this.value = formattedValue;
+                    hiddenInput.value = getCleanNumber(value);
+                    calculateResults();
+                });
+            }
+
+            // Calcular resultados
+            function calculateResults() {
+                const form = $('#calculator-form');
+                const calcType = $('#calcType').val();
+                const valorComercial = getCleanNumber($('#valorComercialHidden').val());
+                const precioDeSesion = getCleanNumber($('#precioDeSesion').val());
+                const valorComercialInput = $('#valorComercial');
+                const valorComercialError = $('#valorComercialError');
+                const precioDeSesionError = $('#precioDeSesionError');
+                const resultsGridContainer = $('#results-grid-container');
+                const descripcionSection = $('#descripcion-section');
+                const parcialidadesSection = $('#parcialidades-section');
+                const cesionDerechosSection = $('#cesion-derechos-section');
+                const gananciaContainer = $('#ganancia-container');
+
+                valorComercialInput.val(formatCurrency(valorComercial));
+
+                if (isNaN(valorComercial) || valorComercial < 0) {
+                    valorComercialError.show();
+                    return;
+                } else {
+                    valorComercialError.hide();
+                }
+
+                if (isNaN(precioDeSesion) || precioDeSesion < 0) {
+                    precioDeSesionError.show();
+                    return;
+                } else {
+                    precioDeSesionError.hide();
+                }
+
+                if (calcType === 'derechos_cobranza') {
+                    descripcionSection.hide();
+                    parcialidadesSection.hide();
+                    gananciaContainer.hide();
+                    cesionDerechosSection.show().addClass('active');
+                    resultsGridContainer.css('grid-template-columns', '1fr');
+                } else {
+                    descripcionSection.show();
+                    parcialidadesSection.show();
+                    gananciaContainer.show();
+                    cesionDerechosSection.hide().removeClass('active');
+                    resultsGridContainer.css('grid-template-columns', window.matchMedia("(min-width: 896px)").matches ? 'repeat(2, 1fr)' : '1fr');
+                }
+
+                const formData = new FormData(form[0]);
+                formData.set('valorComercial', valorComercial);
+                formData.set('precioDeSesion', precioDeSesion);
+
+                $.ajax({
+                    url: '{% url "honorarios_calculator" %}',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                    success: function(data) {
+                        $('#displayValorComercial').text(formatCurrency(getCleanNumber(data.valor_comercial)));
+                        $('#displayValorJudicial').text(formatCurrency(getCleanNumber(data.valor_judicial)));
+                        $('#displayHonorarios').text(formatCurrency(getCleanNumber(data.honorarios)));
+                        $('#displayCession').text(formatCurrency(getCleanNumber(data.precio_de_sesion)));
+                        $('#displayPrimerPago').text(formatCurrency(getCleanNumber(data.firma)));
+                        $('#displaySegundoPago').text(formatCurrency(getCleanNumber(data.segundo_pago || data.cotizacion || data.precio_de_sesion)));
+                        $('#displayTercerPago').text(formatCurrency(getCleanNumber(data.entrega)));
+                        $('#displayTotal').text(formatCurrency(
+                            getCleanNumber(data.firma) +
+                            getCleanNumber(data.segundo_pago || data.cotizacion || data.precio_de_sesion) +
+                            getCleanNumber(data.entrega)
+                        ));
+                        $('#displayGanancia').text(data.ganancia);
+                        $('#displayCostoCompra').text(data.porcentaje_vc);
+                        $('#displayValorExt').text(formatCurrency(getCleanNumber(data.valor_ext)));
+                        $('#displayCotizacion').text(formatCurrency(getCleanNumber(data.cotizacion)));
+
+                        // Actualizar el enlace de reporte completo con calcType y precioDeSesion
+                        const reportUrl = `{% url 'reporte_completo' propiedad.id_propiedad %}?calc_type=${encodeURIComponent(calcType)}&precioDeSesion=${encodeURIComponent(precioDeSesion)}`;
+                        $('#generate-complete-report').attr('href', reportUrl);
+                        console.log('Updated generate-complete-report href:', reportUrl); // Para depuración
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error en AJAX:', status, error);
+                        $('#toast').text('Error al calcular. Intenta de nuevo.').addClass('show').css('background', '#DC2626');
+                        setTimeout(() => $('#toast').removeClass('show'), 3000);
+                    }
+                });
+            }
+
+            // Manejo del overlay de carga para reportes
+            function handleReportDownload(button, messages) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const href = this.href;
+                    const loadingOverlay = document.getElementById('loadingOverlay');
+                    const loadingText = document.getElementById('loadingText');
+
+                    loadingOverlay.classList.add('active');
+
+                    let counter = 0;
+                    const messageInterval = setInterval(() => {
+                        loadingText.textContent = messages[counter];
+                        counter = (counter + 1) % messages.length;
+                    }, 2000);
+
+                    setTimeout(() => {
+                        clearInterval(messageInterval);
+                        window.location.href = href;
+                        setTimeout(() => {
+                            loadingOverlay.classList.remove('active');
+                        }, 5000);
+                    }, 6000);
+                });
+            }
+
+            // Mensajes para los botones de reporte
+            const reportMessages = [
+                "Preparando reporte de estimación...",
+                "Generando archivo PDF...",
+                "Optimizando para descarga...",
+                "¡Listo! Iniciando descarga..."
+            ];
+
+            const completeReportMessages = [
+                "Preparando reporte completo...",
+                "Generando archivo PDF...",
+                "Compilando datos adicionales...",
+                "¡Listo! Iniciando descarga..."
+            ];
+
+            // Inicialización
+            const valorComercialInput = document.getElementById('valorComercial');
+            const precioDeSesionInput = document.getElementById('precioDeSesion');
+            const valorComercialHidden = document.getElementById('valorComercialHidden');
+            const precioDeSesionHidden = document.getElementById('precioDeSesionHidden');
+            const toggleHonorariosButton = document.getElementById('toggle-honorarios');
+            const honorariosSection = document.getElementById('honorarios');
+            const generateReportButton = document.getElementById('generate-report');
+            const generateCompleteReportButton = document.getElementById('generate-complete-report');
+
+            // Asignar manejadores de descarga
+            handleReportDownload(generateReportButton, reportMessages);
+            handleReportDownload(generateCompleteReportButton, completeReportMessages);
+
+            // Formatear valor inicial de Valor Comercial
+            const initialValorComercial = getCleanNumber(valorComercialHidden.value);
+            valorComercialInput.value = formatCurrency(initialValorComercial);
+
+            // Formatear valores en value-pill
+            document.querySelectorAll(".value-pill").forEach(pill => {
+                const rawValue = pill.getAttribute("data-value");
+                if (rawValue && !isNaN(parseFloat(rawValue))) {
+                    pill.textContent = formatCurrency(parseFloat(rawValue));
+                }
+            });
+
+            // Asegurar estado inicial: calculadora oculta, "Generar Reporte" visible, "Generar Reporte Completo" oculto
+            honorariosSection.classList.add('hidden');
+            generateReportButton.classList.remove('hidden');
+            generateCompleteReportButton.classList.add('hidden');
+
+            formatNumberInput(precioDeSesionInput, precioDeSesionHidden);
+            inicializarMapa();
+            calculateResults();
+
+            $('#calcType').on('change', calculateResults);
+            $('#calculator-form').on('submit', function(e) {
+                e.preventDefault();
+                calculateResults();
+            });
+
+            toggleHonorariosButton.addEventListener('click', function() {
+                const isHidden = honorariosSection.classList.toggle('hidden');
+                console.log('Calculadora toggled, visible:', !isHidden); // Para depuración
+                this.innerHTML = isHidden ?
+                    '<i class="fas fa-calculator"></i> <span>Cálculo de Honorarios</span>' :
+                    '<i class="fas fa-calculator"></i> <span>Ocultar Cálculo</span>';
+                this.setAttribute('aria-expanded', !isHidden);
+
+                // Controlar visibilidad de los botones de reporte
+                generateReportButton.classList.toggle('hidden', !isHidden);
+                generateCompleteReportButton.classList.toggle('hidden', isHidden);
+
+                if (!isHidden) {
+                    calculateResults();
+                    honorariosSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+
+                // Cerrar sidebar en móviles después de interactuar con honorarios
+                if (window.innerWidth <= 896) {
+                    $('.sidebar').removeClass('active');
+                    $('.toggle-sidebar i').removeClass('fa-times').addClass('fa-bars');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+  body {
+    background: linear-gradient(-45deg, #fefcef, #bfc6c7, #52b3c0, #00cccc);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+  }
+
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .login-card {
+    background-color: #ffffffdd;
+    backdrop-filter: blur(10px);
+    border-left: 6px solid #00cccc;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+  }
+
+  .login-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .login-btn {
+    background-color: #00cccc;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  .login-btn:hover {
+    background-color: #52b3c0;
+    color: #003035;
+  }
+
+  .form-label {
+    color: #003035;
+    font-weight: 500;
+  }
+
+  .form-control {
+    border-radius: 8px;
+  }
+
+  .login-link a {
+    color: #003035;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .login-link a:hover {
+    color: #00cccc;
+  }
+</style>
+
+<div class="container mt-5 animate__animated animate__fadeIn">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card login-card shadow-lg animate__animated animate__zoomIn">
+        <div class="card-body p-4">
+          <h2 class="text-center mb-4 text-dark animate__animated animate__fadeInDown">Iniciar Sesión</h2>
+
+          {% if error %}
+            <div class="alert alert-danger animate__animated animate__shakeX" role="alert">
+              {{ error }}
+            </div>
+          {% endif %}
+
+          <form method="POST" action="{% url 'signin' %}">
+            {% csrf_token %}
+
+            <div class="mb-3 animate__animated animate__fadeInUp">
+              <label for="id_username" class="form-label">
+                <i class="bi bi-person-fill"></i> Correo electrónico o nombre de usuario
+              </label>
+              <input type="text" name="username" class="form-control" id="id_username" required>
+            </div>
+
+            <div class="mb-3 animate__animated animate__fadeInUp position-relative">
+              <label for="id_password" class="form-label">
+                <i class="bi bi-key-fill"></i> Contraseña
+              </label>
+              
+              <div class="input-group">
+                <input type="password" name="password" class="form-control" id="id_password" required>
+                <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
+                  <i class="bi bi-eye-fill" id="toggleIcon"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="d-grid animate__animated animate__fadeInUp">
+              <button type="submit" class="btn login-btn btn-lg">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+              </button>
+            </div>
+          </form>
+
+          <!-- <div class="text-center mt-4 login-link animate__animated animate__fadeInUp">
+            <a href="{% url 'signup' %}">¿No tienes cuenta? <strong>Regístrate</strong></a>
+          </div> -->
+
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<script>
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('id_password');
+  const toggleIcon = document.getElementById('toggleIcon');
+
+  togglePassword.addEventListener('click', function () {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    toggleIcon.classList.toggle('bi-eye-fill');
+    toggleIcon.classList.toggle('bi-eye-slash-fill');
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,352 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Inmovalor | Reporte de Evaluación</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fa;
+            color: #1a202c;
+            margin: 0;
+            padding: 0.8cm;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        @media print {
+            body {
+                padding: 0.8cm;
+                size: A4;
+                margin: 0;
+            }
+            .header, .main-content, .footer {
+                page-break-inside: avoid;
+            }
+        }
+
+        .header {
+            background: linear-gradient(90deg, #1a202c, #2d3748);
+            color: #ffffff;
+            padding: 0.4rem 0.6rem;
+            border-radius: 12px;
+            margin-bottom: 0.4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header img {
+            height: 35px;
+            max-width: 100%;
+            object-fit: contain;
+            margin-left: 0.5rem;
+        }
+
+        .header .title-container {
+            text-align: right;
+        }
+
+        .header .title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .header .user-info,
+        .header .date {
+            font-size: 0.65rem;
+            opacity: 0.9;
+            margin: 0.1rem 0;
+        }
+
+        .main-content {
+            padding: 0.2rem;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+            padding: 0.4rem;
+            margin-bottom: 0.4rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            page-break-inside: avoid;
+        }
+
+        .map-container {
+            height: 120px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            page-break-inside: avoid;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            border: none;
+            background: url('{% static "images/mapa_placeholder.png" %}') no-repeat center;
+            background-size: cover;
+        }
+
+        .value-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.7rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            background: #e6fffa;
+            color: #2d3748;
+            border: 1px solid #4fd1c5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .details-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 0.15rem;
+        }
+
+        .details-table tr {
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+
+        .details-table td {
+            padding: 0.3rem;
+            font-size: 0.7rem;
+            color: #1a202c;
+            border: none;
+            vertical-align: middle;
+        }
+
+        .details-table td:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+            width: 25px;
+            text-align: center;
+        }
+
+        .details-table td:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        .details-table .feature-column {
+            font-weight: 600;
+            color: #2d3748;
+            white-space: nowrap;
+            padding-right: 0.4rem;
+        }
+
+        .details-table i {
+            color: #4fd1c5;
+            font-size: 0.85rem;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.4rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            gap: 0.4rem;
+            margin-bottom: 0.4rem;
+        }
+
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .map-container {
+                height: 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.25rem;
+            position: relative;
+            padding-bottom: 0.15rem;
+        }
+
+        .section-title::after {
+            content: '';
+            width: 25px;
+            height: 2px;
+            background: #4fd1c5;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        .address-banner {
+            background: #ffffff;
+            padding: 0.3rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 0.4rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .address-banner .flex p {
+            font-size: 0.7rem;
+        }
+
+        .address-banner .flex .text-sm {
+            font-size: 0.6rem;
+        }
+
+        .footer {
+            background: #1a202c;
+            color: #ffffff;
+            text-align: center;
+            padding: 0.4rem;
+            margin-top: 0.4rem;
+            border-radius: 12px;
+        }
+
+        .footer p {
+            font-size: 0.65rem;
+            margin: 0;
+        }
+
+        h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.4rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <img src="{% static 'images/logoblanco.png' %}" alt="Inmovalor Logo">
+        <div class="title-container">
+            <h1 class="title">Inmovalor</h1>
+            <p class="user-info">Generado por: {{ usuario.username }} ({{ usuario.email }})</p>
+            <p class="date">Reporte generado: {{ fecha_actual }}</p>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Banner de Dirección -->
+        <div class="address-banner">
+            <div class="flex items-center">
+                <i class="fas fa-map-marker-alt text-accent mr-2 text-sm"></i>
+                <div>
+                    <p class="font-semibold text-dark">{{ propiedad.calle|escape }}, {{ propiedad.id_colonia.nombre|escape }}</p>
+                    <p class="text-gray text-sm">{{ propiedad.id_municipio.nombre|escape }}, {{ propiedad.id_estado.nombre|escape }} (CP: {{ propiedad.id_codigo_postal.codigo|escape }})</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Título Principal -->
+        <h2>Resultados de Evaluación</h2>
+
+        <!-- Valores Aproximados -->
+        <div class="values-grid">
+            <div class="card">
+                <h3 class="section-title">Valor Comercial Aproximado</h3>
+                <div class="flex items-center">
+                    <span class="value-pill">{{ valor_comercial }}</span>
+                </div>
+            </div>
+            <div class="card">
+                <h3 class="section-title">Valor Judicial Aproximado</h3>
+                <div class="flex items-center">
+                    <span class="value-pill">{{ valor_judicial }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mapa y Detalles -->
+        <div class="content-grid">
+            <!-- Mapa -->
+            <div class="card">
+                <h3 class="section-title">Ubicación</h3>
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
+            </div>
+
+            <!-- Detalles de la Propiedad -->
+            <div class="card">
+                <h3 class="section-title">Detalles de la Propiedad</h3>
+                <table class="details-table">
+                    <tbody>
+                        <tr>
+                            <td><i class="fas fa-home"></i></td>
+                            <td class="feature-column">Tipo de Propiedad</td>
+                            <td>{{ propiedad.tipo_propiedad|escape }}</td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-ruler-combined"></i></td>
+                            <td class="feature-column">Terreno</td>
+                            <td>{{ propiedad.terreno|floatformat:2 }} m²</td>
+                        </tr>
+                        {% if propiedad.tipo_propiedad != 'Terreno' %}
+                            <tr>
+                                <td><i class="fas fa-ruler-combined"></i></td>
+                                <td class="feature-column">Construcción</td>
+                                <td>{{ propiedad.construccion|floatformat:2 }} m²</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-bed"></i></td>
+                                <td class="feature-column">Recámaras</td>
+                                <td>{{ propiedad.recamaras }}</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-bath"></i></td>
+                                <td class="feature-column">Sanitarios</td>
+                                <td>{{ propiedad.sanitarios|floatformat:1 }}</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-car"></i></td>
+                                <td class="feature-column">Estacionamiento</td>
+                                <td>{{ propiedad.estacionamiento }}</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-tools"></i></td>
+                                <td class="feature-column">Estado de Conservación</td>
+                                <td>{{ propiedad.estado_conservacion|escape }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if propiedad.comentarios %}
+                            <tr>
+                                <td><i class="fas fa-comment"></i></td>
+                                <td class="feature-column">Comentarios</td>
+                                <td>{{ propiedad.comentarios|truncatechars:50|escape }}</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Inmovalor - Todos los derechos reservados © {{ fecha_actual|slice:"6:10" }}</p>
+    </footer>
+</body>
+</html>

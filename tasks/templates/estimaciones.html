@@ -1,0 +1,1003 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<style>
+    .estimaciones-container {
+        --estimaciones-primary-color: #00CCCC;
+        --estimaciones-secondary-color: #009999;
+        --estimaciones-accent-color: #CCF5F5;
+        --estimaciones-dark-color: #003035;
+        --estimaciones-light-color: #FFFFFF;
+        --estimaciones-error-color: #FF6B6B;
+        --estimaciones-success-color: #66CC99;
+        background: linear-gradient(-45deg, #fefcef, #bfc6c7, #52b3c0, #00cccc);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: 10px;
+    }
+    
+    @keyframes gradientBG {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+    
+    .estimaciones-container .form-container {
+        background-color: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(8px);
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        border-left: 3px solid var(--estimaciones-primary-color);
+        height: 80vh;
+        overflow-y: auto;
+        transition: all 0.3s ease;
+        scroll-behavior: smooth;
+    }
+    
+    .estimaciones-container .form-container:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+    }
+    
+    .estimaciones-container .form-title {
+        color: var(--estimaciones-dark-color);
+        font-weight: 700;
+        margin-bottom: 0.8rem;
+        margin-top: 0.5rem;
+        position: relative;
+        padding-bottom: 0.2rem;
+        text-align: center;
+        font-size: 1.4rem;
+    }
+    
+    .estimaciones-container .form-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 2px;
+        background: var(--estimaciones-primary-color);
+        border-radius: 2px;
+    }
+    
+    .estimaciones-container .form-label {
+        font-weight: 600;
+        color: var(--estimaciones-dark-color);
+        margin-bottom: 0.2rem;
+        font-size: 0.8rem;
+    }
+    
+    .estimaciones-container .required-field::after {
+        content: " *";
+        color: var(--estimaciones-error-color);
+    }
+    
+    .estimaciones-container .section-title {
+        color: var(--estimaciones-dark-color);
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-top: 0.8rem;
+        margin-bottom: 0.4rem;
+        position: relative;
+        padding-left: 0.6rem;
+    }
+    
+    .estimaciones-container .section-title::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 50%;
+        width: 3px;
+        background: var(--estimaciones-primary-color);
+        border-radius: 2px;
+    }
+    
+    .estimaciones-container .btn-calculate {
+        background-color: var(--estimaciones-primary-color);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.4rem 1rem;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 204, 204, 0.2);
+    }
+    
+    .estimaciones-container .btn-calculate:hover {
+        background-color: var(--estimaciones-secondary-color);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 204, 204, 0.3);
+    }
+    
+    .estimaciones-container .btn-secondary {
+        background-color: var(--estimaciones-dark-color);
+        color: white;
+        font-weight: 500;
+        border-radius: 5px;
+        padding: 0.3rem 0.8rem;
+        transition: all 0.3s ease;
+    }
+    
+    .estimaciones-container .btn-secondary:hover {
+        background-color: var(--estimaciones-secondary-color);
+        color: white;
+        transform: translateY(-2px);
+    }
+    
+    .estimaciones-container .map-container {
+        height: 80vh;
+        width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        position: relative;
+        background-color: #e9ecef;
+    }
+    
+    .estimaciones-container .map-container:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+    
+    .estimaciones-container #map {
+        width: 100%;
+        height: 100%;
+        border: none;
+        transition: opacity 0.3s ease;
+    }
+    
+    .estimaciones-container .loading-map {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #bfc6c7;
+        text-align: center;
+        padding: 2rem;
+        background-color: rgba(0, 48, 53, 0.85);
+        z-index: 10;
+        opacity: 0;
+        animation: fadeIn 0.3s ease forwards;
+    }
+    
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+        }
+    }
+    
+    .estimaciones-container .loading-spinner {
+        border: 4px solid rgba(255, 255, 255, 0.2);
+        border-top: 4px solid #00CCCC;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1rem;
+    }
+    
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    
+    .estimaciones-container .form-status-message {
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-align: center;
+        margin-top: 0.5rem;
+        padding: 0.4rem;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+    
+    .estimaciones-container .form-status-message.success {
+        color: var(--estimaciones-success-color);
+        background-color: rgba(102, 204, 153, 0.1);
+    }
+    
+    .estimaciones-container .form-status-message.error {
+        color: var(--estimaciones-error-color);
+        background-color: rgba(255, 107, 107, 0.1);
+    }
+    
+    .estimaciones-container .form-control,
+    .estimaciones-container .form-select {
+        border-radius: 5px;
+        padding: 0.4rem 0.7rem;
+        border: 1px solid #ced4da;
+        transition: all 0.3s ease;
+        font-size: 0.85rem;
+    }
+    
+    .estimaciones-container .form-control:focus,
+    .estimaciones-container .form-select:focus {
+        border-color: var(--estimaciones-primary-color);
+        outline: none;
+        box-shadow: 0 0 0 0.15rem rgba(0, 204, 204, 0.25);
+        background: var(--estimaciones-light-color);
+    }
+    
+    .estimaciones-container .invalid-feedback {
+        font-size: 0.7rem;
+        color: var(--estimaciones-error-color);
+    }
+    
+    .estimaciones-container .animate-fade-in {
+        animation: fadeIn 0.6s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .estimaciones-container .animate-float {
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    .estimaciones-container .container-fluid.py-2 {
+        margin-top: 30px;
+    }
+    
+    @keyframes float {
+        0% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-5px);
+        }
+        100% {
+            transform: translateY(0px);
+        }
+    }
+    
+    .estimaciones-container .input-group-text {
+        background-color: var(--estimaciones-accent-color);
+        color: var(--estimaciones-dark-color);
+        border-radius: 5px 0 0 5px;
+        transition: all 0.3s ease;
+        padding: 0.4rem 0.6rem;
+    }
+    
+    .estimaciones-container .input-group:focus-within .input-group-text {
+        background-color: var(--estimaciones-primary-color);
+        color: white;
+    }
+    
+    .estimaciones-container .loading-spinner-field {
+        display: none;
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    .estimaciones-container .form-control.is-loading {
+        padding-right: 30px;
+    }
+    
+    .estimaciones-container .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(0, 204, 204, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 6px rgba(0, 204, 204, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(0, 204, 204, 0);
+        }
+    }
+    
+    .estimaciones-container .container-fluid {
+        padding: 0.5rem;
+    }
+    
+    .estimaciones-container .hidden-field {
+        display: none;
+    }
+</style>
+
+<div class="estimaciones-container">
+    <div class="container-fluid py-2 animate-fade-in">
+        <div class="row g-2">
+            <!-- Formulario -->
+            <div class="col-lg-6">
+                <div class="form-container">
+                    <h1 class="form-title">Estimación de Propiedad</h1>
+                    <form method="POST" class="row g-2 needs-validation" novalidate>
+                        {% csrf_token %}
+                        <div class="col-md-6">
+                            <label class="form-label required-field">Tipo de propiedad</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                <select id="tipo_propiedad" name="tipo_propiedad" class="form-select" required>
+                                    <option selected disabled value="">Seleccionar...</option>
+                                    <option value="Casa">Casa</option>
+                                    <option value="Departamento">Departamento</option>
+                                    <option value="Terreno">Terreno</option>
+                                </select>
+                                <div class="invalid-feedback">Selecciona una opción válida.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label required-field">Estado</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                <select class="form-control" id="estado" name="estado" required>
+                                    <option selected disabled value="">Seleccionar...</option>
+                                    {% for estado in estados %}
+                                    <option value="{{ estado.id_estado }}">{{ estado.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="invalid-feedback">Selecciona una opción válida.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label required-field">Alcaldía/Municipio</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-city"></i></span>
+                                <select class="form-control" id="municipio" name="municipio" required>
+                                    <option selected disabled value="">Seleccionar...</option>
+                                </select>
+                                <div class="loading-spinner-field" id="municipio-spinner">
+                                    <div class="spinner-border spinner-border-sm text-secondary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">Selecciona una opción válida.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label required-field">Colonia</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-map-pin"></i></span>
+                                <select id="colonia" name="colonia" class="form-control" required>
+                                    <option selected disabled value="">Seleccionar...</option>
+                                </select>
+                                <div class="loading-spinner-field" id="colonia-spinner">
+                                    <div class="spinner-border spinner-border-sm text-secondary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">Selecciona una opción válida.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label required-field">Código Postal</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-mail-bulk"></i></span>
+                                <select id="cp" name="cp" class="form-control" required>
+                                    <option selected disabled value="">Seleccionar...</option>
+                                </select>
+                                <div class="invalid-feedback">Selecciona una opción válida.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label required-field">Calle</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-road"></i></span>
+                                <input id="calle" name="calle" type="text" class="form-control" placeholder="Ej. Av. Revolución 123" required>
+                                <div class="invalid-feedback">Introduce una calle válida.</div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-1">
+                            <button type="button" id="btnUbicar" class="btn btn-secondary animate-float">
+                                <i class="fas fa-map-marker-alt me-2"></i> Ubicar en mapa
+                            </button>
+                        </div>
+                        <div class="col-12">
+                            <span class="section-title">Características de la propiedad</span>
+                        </div>
+                        <div class="col-md-4 property-field">
+                            <label class="form-label required-field">Recámaras</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-bed"></i></span>
+                                <input id="recamaras" name="recamaras" type="number" class="form-control" min="0" required>
+                                <div class="invalid-feedback">Campo requerido.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 property-field">
+                            <label class="form-label required-field">Sanitarios</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-bath"></i></span>
+                                <input id="sanitarios" name="sanitarios" type="text" class="form-control" required pattern="^[1-9]\d*(\.5)?$" title="Debe ser entero o medio baño (ej. 1, 1.5, 2). Mínimo 1 baño." oninput="validateSanitarios(this)">
+                                <div class="invalid-feedback">Debe ser entero o medio baño (ej. 1, 1.5, 2). Mínimo 1 baño.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 property-field">
+                            <label class="form-label required-field">Estacionamiento</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-car"></i></span>
+                                <input id="estacionamiento" name="estacionamiento" type="number" class="form-control" min="0" required>
+                                <div class="invalid-feedback">Campo requerido.</div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Comentarios adicionales</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-comment-alt"></i></span>
+                                <textarea id="comentarios" name="comentarios" class="form-control" rows="2" placeholder="Ej. Terraza, jardín, amenidades..."></textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-1">
+                            <span class="section-title">Metraje</span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label required-field">Terreno (m²)</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-vector-square"></i></span>
+                                <input id="terreno" name="terreno" type="number" class="form-control" min="0" step="0.01" required>
+                                <div class="invalid-feedback">Campo requerido.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 property-field">
+                            <label class="form-label required-field">Construcción (m²)</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-home"></i></span>
+                                <input id="construccion" name="construccion" type="number" class="form-control" min="0" step="0.01" required>
+                                <div class="invalid-feedback">Campo requerido.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 property-field">
+                            <label class="form-label required-field">Estado de conservación</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-clipboard-check"></i></span>
+                                <select id="estado_conservacion" name="estado_conservacion" class="form-select" required>
+                                    <option selected disabled value="">Seleccionar...</option>
+                                    <option value="Muy bueno">Muy bueno</option>
+                                    <option value="Bueno">Bueno</option>
+                                    <option value="Regular">Regular</option>
+                                    <option value="Malo">Malo</option>
+                                    <option value="Muy malo">Muy malo</option>
+                                </select>
+                                <div class="invalid-feedback">Selecciona un estado de conservación.</div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div id="form-status" class="form-status-message error">
+                                <i class="fas fa-exclamation-circle me-1"></i> Falta completar uno o más campos requeridos.
+                            </div>
+                        </div>
+                        <div class="col-12 text-end mt-2">
+                            <button id="btn-calcular" type="submit" class="btn btn-lg" style="background-color: var(--estimaciones-primary-color);
+                                    color: white;
+                                    border: none;
+                                    padding: 12px 24px;
+                                    border-radius: 10px;
+                                    font-weight: bold;
+                                    transition: all 0.2s ease;
+                                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+                                <i class="fas fa-calculator me-2"></i> Calcular valor
+                            </button>
+                        </div>
+
+                        <script>
+                            const boton = document.getElementById("btn-calcular");
+
+                            boton.addEventListener("mouseover", function() {
+                                this.style.backgroundColor = "var(--estimaciones-secondary-color)";
+                                this.style.transform = "scale(1.05)";
+                            });
+
+                            boton.addEventListener("mouseout", function() {
+                                this.style.backgroundColor = "var(--estimaciones-primary-color)";
+                                this.style.transform = "scale(1)";
+                            });
+
+                            boton.addEventListener("mousedown", function() {
+                                this.style.backgroundColor = "#007777";
+                                this.style.transform = "scale(0.95)";
+                            });
+
+                            boton.addEventListener("mouseup", function() {
+                                this.style.backgroundColor = "var(--estimaciones-secondary-color)";
+                                this.style.transform = "scale(1.05)";
+                                setTimeout(() => {
+                                    this.style.backgroundColor = "var(--estimaciones-primary-color)";
+                                    this.style.transform = "scale(1)";
+                                }, 200);
+                            });
+
+                            document.getElementById('tipo_propiedad').addEventListener('change', function() {
+                                const propertyFields = document.querySelectorAll('.property-field');
+                                const isTerreno = this.value === 'Terreno';
+                                propertyFields.forEach(field => {
+                                    if (isTerreno) {
+                                        field.classList.add('hidden-field');
+                                        field.querySelector('input, select').removeAttribute('required');
+                                    } else {
+                                        field.classList.remove('hidden-field');
+                                        field.querySelector('input, select').setAttribute('required', '');
+                                    }
+                                });
+                                checkFormValidity();
+                            });
+
+                            function validateSanitarios(input) {
+                                let value = input.value.trim();
+
+                                // Permitir campo vacío temporalmente durante la edición
+                                if (value === '') {
+                                    input.setCustomValidity('');
+                                    return;
+                                }
+
+                                // Reemplazar comas por puntos para soportar diferentes formatos
+                                value = value.replace(',', '.');
+
+                                // Validar formato con expresión regular
+                                const sanitariosRegex = /^[1-9]\d*(\.5)?$/;
+                                if (!sanitariosRegex.test(value)) {
+                                    input.setCustomValidity('Formato inválido. Use enteros o .5 (ej. 1, 1.5, 2)');
+                                    return;
+                                }
+
+                                // Convertir a número para validaciones adicionales
+                                const numValue = parseFloat(value);
+
+                                // Validar mínimo 1 baño
+                                if (numValue < 1) {
+                                    input.setCustomValidity('Mínimo 1 baño completo');
+                                    return;
+                                }
+
+                                // Validar parte decimal
+                                const decimalPart = numValue % 1;
+                                if (decimalPart !== 0 && decimalPart !== 0.5) {
+                                    input.setCustomValidity('Solo se permiten medios baños (.5)');
+                                    return;
+                                }
+
+                                // Formatear el valor (opcional)
+                                input.value = value.includes('.') ? value : numValue.toString();
+
+                                // Todo correcto
+                                input.setCustomValidity('');
+                                checkFormValidity();
+                            }
+
+                            function checkFormValidity() {
+                                const form = document.querySelector('.needs-validation');
+                                const requiredFields = form.querySelectorAll('[required]');
+                                let allValid = true;
+
+                                requiredFields.forEach(field => {
+                                    if (!field.value || field.value === '' || (field.tagName === 'SELECT' && field.value === '')) {
+                                        allValid = false;
+                                    }
+                                });
+
+                                const statusDiv = document.getElementById('form-status');
+                                if (allValid) {
+                                    statusDiv.innerHTML = '<i class="fas fa-check-circle me-1"></i> ¡Todos los campos requeridos están completos!';
+                                    statusDiv.classList.remove('error');
+                                    statusDiv.classList.add('success');
+                                } else {
+                                    statusDiv.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i> Falta completar uno o más campos requeridos.';
+                                    statusDiv.classList.remove('success');
+                                    statusDiv.classList.add('error');
+                                }
+                            }
+
+                            // Validar al cargar la página
+                            checkFormValidity();
+                        </script>
+                        {% if messages %} {% for message in messages %}
+                        <div class="col-12 mt-2">
+                            <div class="form-status-message {{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        </div>
+                        {% endfor %} {% endif %}
+                    </form>
+                </div>
+            </div>
+            <!-- Mapa -->
+            <div class="col-lg-6">
+                <div class="map-container">
+                    <div class="loading-map" id="loadingMap">
+                        <div class="loading-spinner"></div>
+                        <h3>Cargando mapa...</h3>
+                        <p>Por favor espera mientras se carga la ubicación</p>
+                    </div>
+                    <iframe id="map" allowfullscreen="" loading="lazy" title="Mapa de ubicación">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<script>
+    $(document).ready(function() {
+        // Inicializar tooltips
+        let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Validación del formulario en submit
+        (function() {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        // Scroll automático al primer campo requerido vacío
+        function scrollToNextField(currentField) {
+            const form = document.querySelector('.form-container');
+            const fields = Array.from(form.querySelectorAll('input[required], select[required]'));
+            const calleIndex = fields.findIndex(field => field.id === 'calle');
+            const relevantFields = fields.slice(calleIndex);
+            const firstEmptyField = relevantFields.find(field =>
+                !field.value ||
+                (field.tagName === 'SELECT' && field.value === '') ||
+                (field.type === 'number' && field.value <= 0)
+            );
+
+            if (firstEmptyField && firstEmptyField !== currentField) {
+                setTimeout(() => {
+                    const offset = 20;
+                    const fieldPosition = firstEmptyField.getBoundingClientRect().top + form.scrollTop - form.getBoundingClientRect().top;
+                    form.scrollTo({
+                        top: fieldPosition - offset,
+                        behavior: 'smooth'
+                    });
+                    firstEmptyField.focus();
+                }, 100);
+            }
+        }
+
+        // Agregar eventos a los campos requeridos
+        const finalFields = ['calle', 'recamaras', 'sanitarios', 'estacionamiento', 'terreno', 'construccion', 'estado_conservacion'];
+        const requiredFields = document.querySelectorAll('input[required], select[required]');
+        requiredFields.forEach(field => {
+            field.addEventListener('change', function() {
+                checkFormValidity();
+                if (finalFields.includes(this.id)) {
+                    if (this.value && (this.type !== 'number' || this.value > 0)) {
+                        scrollToNextField(this);
+                    }
+                }
+            });
+        });
+
+        // Evento change para el selector de estado
+        $('#estado').on('change', function() {
+            const estadoId = $(this).val();
+            if (estadoId) {
+                $('#municipio-spinner').show();
+                $('#municipio').addClass('is-loading');
+
+                $.ajax({
+                    url: '/obtener_municipios/',
+                    data: {
+                        'estado_id': estadoId
+                    },
+                    success: function(data) {
+                        $('#municipio').empty().append('<option selected disabled value="">Seleccionar...</option>');
+                        $.each(data, function(index, municipio) {
+                            $('#municipio').append(`<option value="${municipio.id_municipio}">${municipio.nombre}</option>`);
+                        });
+                        $('#colonia').empty().append('<option selected disabled value="">Seleccionar...</option>');
+                        $('#cp').empty().append('<option selected disabled value="">Seleccionar...</option>');
+
+                        // Mostrar mapa del estado (sin cambiar el zoom)
+                        mostrarMapaEstado($('#estado option:selected').text());
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error al obtener municipios:', status, error);
+                    },
+                    complete: function() {
+                        $('#municipio-spinner').hide();
+                        $('#municipio').removeClass('is-loading');
+                    }
+                });
+            } else {
+                $('#municipio').empty().append('<option selected disabled value="">Seleccionar...</option>');
+                $('#colonia').empty().append('<option selected disabled value="">Seleccionar...</option>');
+                $('#cp').empty().append('<option selected disabled value="">Seleccionar...</option>');
+                // Volver al mapa de México si no hay estado seleccionado
+                inicializarMapaMexico();
+            }
+        });
+
+        // Evento change para el selector de municipio
+        $('#municipio').on('change', function() {
+            const municipioId = $(this).val();
+            if (municipioId) {
+                $('#colonia-spinner').show();
+                $('#colonia').addClass('is-loading');
+
+                $.ajax({
+                    url: '/obtener_colonias/',
+                    data: {
+                        'municipio_id': municipioId
+                    },
+                    success: function(data) {
+                        $('#colonia').empty().append('<option selected disabled value="">Seleccionar...</option>');
+                        $.each(data, function(index, colonia) {
+                            $('#colonia').append(`<option value="${colonia.id_colonia}">${colonia.nombre}</option>`);
+                        });
+                        $('#cp').empty().append('<option selected disabled value="">Seleccionar...</option>');
+
+                        // Mostrar mapa del municipio (sin cambiar el zoom)
+                        mostrarMapaMunicipio($('#municipio option:selected').text(), $('#estado option:selected').text());
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error al obtener colonias:', status, error);
+                        $('#colonia').empty().append('<option selected disabled value="">Error al cargar</option>');
+                    },
+                    complete: function() {
+                        $('#colonia-spinner').hide();
+                        $('#colonia').removeClass('is-loading');
+                    }
+                });
+            } else {
+                $('#colonia').empty().append('<option selected disabled value="">Seleccionar...</option>');
+                $('#cp').empty().append('<option selected disabled value="">Seleccionar...</option>');
+                // Volver al mapa del estado si no hay municipio seleccionado
+                mostrarMapaEstado($('#estado option:selected').text());
+            }
+        });
+
+        // Evento change para el selector de colonia
+        $('#colonia').on('change', function() {
+            const coloniaId = $(this).val();
+            if (coloniaId) {
+                // Actualizar el mapa automáticamente al seleccionar una colonia
+                mostrarMapaColonia(
+                    $('#colonia option:selected').text(),
+                    $('#municipio option:selected').text(),
+                    $('#estado option:selected').text()
+                );
+
+                $.ajax({
+                    url: '/obtener_codigos_postales/',
+                    data: {
+                        'colonia_id': coloniaId
+                    },
+                    success: function(data) {
+                        $('#cp').empty().append('<option selected disabled value="">Seleccionar...</option>');
+                        $.each(data, function(index, cp) {
+                            $('#cp').append(`<option value="${cp.id_codigo_postal}">${cp.codigo}</option>`);
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error al obtener códigos postales:', status, error);
+                    }
+                });
+            } else {
+                $('#cp').empty().append('<option selected disabled value="">Seleccionar...</option>');
+                // Volver al mapa del municipio si no hay colonia seleccionada
+                mostrarMapaMunicipio($('#municipio option:selected').text(), $('#estado option:selected').text());
+            }
+        });
+
+        // Evento change para el selector de código postal
+        $('#cp').on('change', function() {
+            const cpId = $(this).val();
+            if (cpId) {
+                $.ajax({
+                    url: '/obtener_datos_por_cp/',
+                    data: {
+                        'codigo_postal': cpId
+                    },
+                    success: function(data) {
+                        if (data) {
+                            if (data.colonia && data.colonia.nombre) {
+                                $('#colonia').val(data.colonia.id_colonia).trigger('change');
+                            }
+                            if (data.municipio && data.municipio.nombre) {
+                                $('#municipio').val(data.municipio.id_municipio).trigger('change');
+                            }
+                            if (data.estado && data.estado.nombre) {
+                                $('#estado').val(data.estado.id_estado).trigger('change');
+                            }
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error al obtener datos por CP:', status, error);
+                    }
+                });
+            }
+        });
+
+        // Evento click para el botón "Ubicar en mapa"
+        $('#btnUbicar').click(function() {
+            const colonia = $('#colonia option:selected').text().trim();
+            const municipio = $('#municipio option:selected').text().trim();
+            const estado = $('#estado option:selected').text().trim();
+            const calle = $('#calle').val().trim();
+
+            if (colonia && colonia !== "Seleccionar...") {
+                mostrarMapaColonia(colonia, municipio, estado);
+            } else if (municipio && municipio !== "Seleccionar...") {
+                mostrarMapaMunicipio(municipio, estado);
+            } else if (estado && estado !== "Seleccionar...") {
+                mostrarMapaEstado(estado);
+            } else {
+                inicializarMapaMexico();
+            }
+        });
+
+        // Inicializar el mapa con México
+        inicializarMapaMexico();
+
+        // Función para inicializar el mapa mostrando la República Mexicana
+        function inicializarMapaMexico() {
+            const mapFrame = document.getElementById('map');
+            const loadingMap = document.getElementById('loadingMap');
+
+            loadingMap.style.display = 'flex';
+            mapFrame.style.opacity = '0.5';
+
+            const defaultUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d8000000!2d-102.5528!3d23.6345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zTcOpeGljbw!5e0!3m2!1ses!2smx!4v${Date.now()}&z=4`;
+
+            mapFrame.src = defaultUrl;
+            mapFrame.onload = () => {
+                loadingMap.style.display = 'none';
+                mapFrame.style.opacity = '1';
+            };
+            mapFrame.onerror = () => {
+                console.error('Error al cargar el mapa:', defaultUrl);
+                loadingMap.style.display = 'none';
+                mapFrame.style.opacity = '1';
+                document.getElementById('form-status').innerHTML = '<i class="fas fa-exclamation-circle me-1"></i> Error al cargar el mapa. Por favor, intenta de nuevo.';
+            };
+        }
+
+        // Función para mostrar mapa de un estado (sin zoom cercano)
+        function mostrarMapaEstado(estado) {
+            const mapFrame = document.getElementById('map');
+            const loadingMap = document.getElementById('loadingMap');
+
+            loadingMap.style.display = 'flex';
+            mapFrame.style.opacity = '0.5';
+
+            const estadoCoords = {
+                "Ciudad de México": "19.4326,-99.1332",
+                "Estado de México": "19.2833,-99.6535",
+                "Jalisco": "20.6668,-103.3918",
+                // ... (otros estados)
+            };
+
+            const centerPoint = estadoCoords[estado] || '23.6345,-102.5528';
+            const query = `${estado}, México`;
+            const encodedQuery = encodeURIComponent(query);
+
+            const mapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1000000!2d${centerPoint.split(',')[1]}!3d${centerPoint.split(',')[0]}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s${encodedQuery}!5e0!3m2!1ses!2smx!4v${Date.now()}&z=6`;
+
+            mapFrame.src = mapUrl;
+            mapFrame.onload = () => {
+                loadingMap.style.display = 'none';
+                mapFrame.style.opacity = '1';
+            };
+        }
+
+        // Función para mostrar mapa de un municipio (sin zoom cercano)
+        function mostrarMapaMunicipio(municipio, estado) {
+            const mapFrame = document.getElementById('map');
+            const loadingMap = document.getElementById('loadingMap');
+
+            loadingMap.style.display = 'flex';
+            mapFrame.style.opacity = '0.5';
+
+            const esCDMX = estado === "Ciudad de México";
+            const prefijo = esCDMX ? "Alcaldía " : "Municipio ";
+
+            const municipioCoords = {
+                "Ciudad de México": {
+                    "Álvaro Obregón": "19.3589,-99.2036",
+                    "Azcapotzalco": "19.4872,-99.1854",
+                    // ... (otros municipios de CDMX)
+                },
+                "Estado de México": {
+                    "Toluca": "19.2925,-99.6569",
+                    // ... (otros municipios de EdoMex)
+                }
+                // ... (otros estados)
+            };
+
+            const centerPoint = (municipioCoords[estado] && municipioCoords[estado][municipio]) ?
+                municipioCoords[estado][municipio] : '23.6345,-102.5528';
+            const query = `${prefijo}${municipio}, ${estado}`;
+            const encodedQuery = encodeURIComponent(query);
+
+            const mapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d120000!2d${centerPoint.split(',')[1]}!3d${centerPoint.split(',')[0]}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s${encodedQuery}!5e0!3m2!1ses!2smx!4v${Date.now()}&z=11`;
+
+            mapFrame.src = mapUrl;
+            mapFrame.onload = () => {
+                loadingMap.style.display = 'none';
+                mapFrame.style.opacity = '1';
+            };
+        }
+
+        // Función para mostrar mapa de una colonia (con zoom cercano)
+        function mostrarMapaColonia(colonia, municipio, estado) {
+            const mapFrame = document.getElementById('map');
+            const loadingMap = document.getElementById('loadingMap');
+
+            loadingMap.style.display = 'flex';
+            mapFrame.style.opacity = '0.5';
+
+            const esCDMX = estado === "Ciudad de México";
+            const prefijo = esCDMX ? "Alcaldía " : "Municipio ";
+
+            const coloniaCoords = {
+                "Ciudad de México": {
+                    "Álvaro Obregón": {
+                        "San Ángel": "19.3467,-99.1900",
+                        "Jardines del Pedregal": "19.3308,-99.2100"
+                    },
+                    "Benito Juárez": {
+                        "Del Valle": "19.3933,-99.1642"
+                    }
+                    // ... (otras colonias)
+                }
+                // ... (otros estados)
+            };
+
+            const centerPoint = (coloniaCoords[estado] && coloniaCoords[estado][municipio] && coloniaCoords[estado][municipio][colonia]) ?
+                coloniaCoords[estado][municipio][colonia] : '23.6345,-102.5528';
+            const query = `${colonia}, ${prefijo}${municipio}, ${estado}`;
+            const encodedQuery = encodeURIComponent(query);
+
+            const mapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5000!2d${centerPoint.split(',')[1]}!3d${centerPoint.split(',')[0]}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s${encodedQuery}!5e0!3m2!1ses!2smx!4v${Date.now()}&z=16`;
+
+            mapFrame.src = mapUrl;
+            mapFrame.onload = () => {
+                loadingMap.style.display = 'none';
+                mapFrame.style.opacity = '1';
+            };
+        }
+    });
+</script>
+{% endblock %}

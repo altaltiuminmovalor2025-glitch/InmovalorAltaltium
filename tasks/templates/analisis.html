@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Análisis de Datos</title>
+</head>
+<body>
+    <h1>Análisis de Alcaldías</h1>
+    <h2>Gráfica de Promedio</h2>
+    {% if error %}
+        <p>{{ error }}</p>
+    {% else %}
+        <img src="data:image/png;base64,{{ grafica }}" alt="Gráfica de pastel" style="max-width: 100%;">
+    {% endif %}
+</body>
+</html>

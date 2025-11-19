@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  body {
+    background: linear-gradient(-45deg, #fefcef, #bfc6c7, #52b3c0, #00cccc);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+  }
+
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .register-card {
+    background-color: #ffffffdd;
+    backdrop-filter: blur(10px);
+    border-left: 6px solid #00cccc;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+  }
+
+  .register-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .register-btn {
+    background-color: #00cccc;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  .register-btn:hover {
+    background-color: #52b3c0;
+    color: #003035;
+  }
+
+  .form-label {
+    color: #003035;
+    font-weight: 500;
+  }
+
+  .input-group-text {
+    background-color: #00cccc;
+    color: #ffffff;
+    border: none;
+  }
+
+  .form-control {
+    border-radius: 8px;
+  }
+
+  .login-link a {
+    color: #003035;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .login-link a:hover {
+    color: #00cccc;
+  }
+</style>
+
+<div class="container mt-5 animate__animated animate__fadeIn">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card register-card shadow-lg animate__animated animate__zoomIn">
+        <div class="card-body p-4">
+          <h2 class="text-center mb-4 text-dark animate__animated animate__fadeInDown">Crear cuenta</h2>
+
+          {% if error %}
+            <div class="alert alert-danger animate__animated animate__shakeX" role="alert">
+              {{ error }}
+            </div>
+          {% endif %}
+
+          <form action="{% url 'signup' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3 animate__animated animate__fadeInUp">
+              <label for="nombre" class="form-label">Nombre completo</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person-vcard"></i></span>
+                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre" required>
+              </div>
+            </div>
+
+            <div class="mb-3 animate__animated animate__fadeInUp">
+              <label for="username" class="form-label">Nombre de usuario</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Usuario" required>
+              </div>
+            </div>
+
+            <div class="mb-3 animate__animated animate__fadeInUp">
+              <label for="email" class="form-label">Correo electrónico</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                <input type="email" class="form-control" id="email" name="email" placeholder="ejemplo@correo.com" required>
+              </div>
+            </div>
+
+            <div class="mb-3 animate__animated animate__fadeInUp">
+              <label for="password1" class="form-label">Contraseña</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                <input type="password" class="form-control" id="password1" name="password1" placeholder="********" required>
+              </div>
+            </div>
+
+            <div class="mb-3 animate__animated animate__fadeInUp">
+              <label for="password2" class="form-label">Confirmar contraseña</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input type="password" class="form-control" id="password2" name="password2" placeholder="********" required>
+              </div>
+            </div>
+
+            <div class="d-grid animate__animated animate__fadeInUp">
+              <button type="submit" class="btn register-btn btn-lg">
+                <i class="bi bi-person-plus-fill me-2"></i>Crear cuenta
+              </button>
+            </div>
+          </form>
+
+          <div class="text-center mt-4 login-link animate__animated animate__fadeInUp">
+            <a href="{% url 'signin' %}">¿Ya tienes cuenta? <strong>Inicia sesión</strong></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

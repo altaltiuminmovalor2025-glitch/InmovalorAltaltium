@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Inmovalor: Tu aliado en soluciones inmobiliarias modernas e innovadoras.">
+  <meta name="keywords" content="inmobiliaria, propiedades, soluciones innovadoras, bienes raíces">
+  <meta name="author" content="Inmovalor">
+  <title>Inmovalor - Soluciones Inmobiliarias Modernas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000000;
+      --cyan: #00cccc;
+      --light-cyan: #52b3c0;
+      --teal: #008a8a;
+      --dark-teal: #003035;
+      --dark-gray: #0d1d1f;
+      --gray: #949797;
+      --light-gray: #bfc6c7;
+      --cream: #fefcef;
+      --white: #ffffff;
+      --bg-gradient: linear-gradient(135deg, var(--cream), var(--light-gray));
+      --hero-gradient: linear-gradient(135deg, rgba(0, 138, 138, 0.6), rgba(82, 179, 192, 0.6));
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-gradient);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: var(--dark-gray);
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: var(--dark-teal);
+      padding: 1rem 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .navbar-brand {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--white);
+      transition: color 0.3s ease;
+    }
+    .navbar-brand:hover {
+      color: var(--cyan);
+    }
+    .nav-link {
+      color: var(--white) !important;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      transition: color 0.3s ease;
+    }
+    .nav-link:hover {
+      color: var(--cyan) !important;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--hero-gradient), url('/static/images/altaltium4.png') no-repeat center center/cover;
+      position: relative;
+      overflow: hidden;
+      padding: 4rem 2rem;
+      clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+      animation: zoomIn 12s ease-in-out infinite alternate;
+    }
+    .hero-content {
+      text-align: center;
+      max-width: 700px;
+      animation: fadeInUp 1s ease-out;
+      z-index: 1;
+    }
+    .hero-content h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    .hero-content p {
+      font-size: 1.25rem;
+      color: var(--cream);
+      margin-bottom: 2rem;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    .hero-content .btn {
+      background-color: var(--cyan);
+      color: var(--white);
+      padding: 0.75rem 2rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    .hero-content .btn:hover {
+      background-color: var(--light-cyan);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Decorative Elements */
+    .decor-shape {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      animation: float 8s ease-in-out infinite;
+      z-index: 0;
+    }
+    .shape-1 { width: 150px; height: 150px; top: 10%; left: 5%; }
+    .shape-2 { width: 100px; height: 100px; bottom: 15%; right: 10%; }
+    .shape-3 { width: 80px; height: 80px; top: 30%; right: 20%; }
+
+    /* Footer */
+    .footer {
+      background-color: var(--dark-teal);
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--white);
+      font-size: 0.9rem;
+      margin-top: auto;
+    }
+    .footer a {
+      color: var(--cyan);
+      text-decoration: none;
+      margin: 0 0.75rem;
+      transition: color 0.3s ease;
+    }
+    .footer a:hover {
+      color: var(--light-cyan);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes zoomIn {
+      from { background-size: 100%; }
+      to { background-size: 110%; }
+    }
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-25px); }
+      100% { transform: translateY(0); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero-section {
+        min-height: 60vh;
+        padding: 2rem 1.5rem;
+        clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+      }
+      .hero-content {
+        max-width: 100%;
+      }
+      .hero-content h1 {
+        font-size: 2rem;
+      }
+      .hero-content p {
+        font-size: 1rem;
+      }
+      .decor-shape {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#" aria-label="Inmovalor Home">Inmovalor</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Ajustes</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Servicios</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Bienvenido a Inmovalor</h1>
+      <p>Aquí podrás obtener una estimación precisa del valor de propiedades y acceder a análisis exhaustivos para tomar decisiones informadas.</p>
+      <a href="{% url 'estimaciones' %}" class="btn">Ir a estimación de propiedad</a>
+    </div>
+    <div class="decor-shape shape-1"></div>
+    <div class="decor-shape shape-2"></div>
+    <div class="decor-shape shape-3"></div>
+  </section>
+
+  <footer class="footer">
+    <p>
+      <a href="#">Privacidad</a> |
+      <a href="#">Términos</a> |
+      <a href="#">Cookies</a>
+    </p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
