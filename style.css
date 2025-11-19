@@ -1,0 +1,12 @@
+.navbar-custom {
+    background-color: rgb(255, 0, 98);
+}
+.navbar-custom .navbar-brand .navbar-custom .nav-link{
+color:aliceblue !important;
+}
+.welcome-message{
+    background-color: beige;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 1);
+}
